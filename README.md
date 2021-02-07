@@ -1,5 +1,5 @@
 # udemy-android-study
-Android Jetpack, Clean Architecture &amp; Testing Masterclass 유데미 강의에서 공부 및 실습한 것들을 정리합니다.
+Android Jetpack, Clean Architecture &amp; Testing Masterclass 유데미 강의에서 공부 및 필요한 부분들을 실습한 것들을 정리합니다.
 
 ## 강의사이트
 https://www.udemy.com/course/android-architecture-componentsmvvm-with-dagger-retrofit/
