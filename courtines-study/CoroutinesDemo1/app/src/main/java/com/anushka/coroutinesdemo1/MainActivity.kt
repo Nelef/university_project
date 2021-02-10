@@ -1,9 +1,12 @@
 package com.anushka.coroutinesdemo1
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private var count = 0
@@ -16,7 +19,9 @@ class MainActivity : AppCompatActivity() {
             tvCount.text = count++.toString()
         }
         btnDownloadUserData.setOnClickListener {
-            downloadUserData()
+            CoroutineScope(Dispatchers.IO).launch {
+                downloadUserData()
+            }
         }
     }
 
