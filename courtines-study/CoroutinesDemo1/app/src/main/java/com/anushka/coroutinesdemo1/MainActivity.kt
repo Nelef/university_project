@@ -2,10 +2,12 @@ package com.anushka.coroutinesdemo1
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 
 class MainActivity : AppCompatActivity() {
     private var count = 0
@@ -14,12 +16,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        CoroutineScope(IO).launch {
+        CoroutineScope(Main).launch {
             Log.i("MyTag", "CoroutineScope Start")
-            val stock1 = async { getStock1() }
-            val stock2 = async { getStock2() }
+            val stock1 = async(IO) { getStock1() }
+            val stock2 = async(IO) { getStock2() }
             val total = stock1.await() + stock2.await()
             Log.i("MyTag", "TOTAL -> $total")
+            Toast.makeText(this@MainActivity, "Totail is $total", Toast.LENGTH_SHORT).show()
         }
 
         btnCount.setOnClickListener {
