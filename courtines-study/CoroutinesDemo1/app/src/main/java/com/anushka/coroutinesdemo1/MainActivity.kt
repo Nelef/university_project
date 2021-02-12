@@ -29,14 +29,17 @@ class MainActivity : AppCompatActivity() {
             tvCount.text = count++.toString()
         }
         btnDownloadUserData.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                downloadUserData()
+//            CoroutineScope(Dispatchers.IO).launch {
+//                downloadUserData()
+//            }
+            CoroutineScope(Main).launch {
+                tvUserMessage.text = UserDataManager().getTotalUserCount().toString()
             }
         }
     }
 
     private suspend fun downloadUserData() {
-        withContext(Dispatchers.Main) {
+        withContext(Main) {
             for (i in 1..200000) {
                 tvUserMessage.text = i.toString() + " in " + Thread.currentThread().name
                 delay(1000)
