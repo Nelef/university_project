@@ -33,7 +33,8 @@ class MainActivity : AppCompatActivity() {
 //                downloadUserData()
 //            }
             CoroutineScope(Main).launch {
-                tvUserMessage.text = UserDataManager().getTotalUserCount().toString()
+                // tvUserMessage.text = UserDataManager().getTotalUserCount().toString()
+                tvUserMessage.text = UserDataManager2().getTotalUserCount().toString()
             }
         }
     }

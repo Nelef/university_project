@@ -13,7 +13,7 @@ class UserDataManager {
             delay(1000)
             return@async 70
         }
-        return count + deferred.await()
+        return count + deferred.await() // 0 + 70
     }
 
 }
