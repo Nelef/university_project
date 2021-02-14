@@ -4,6 +4,14 @@ Android Jetpack, Clean Architecture &amp; Testing Masterclass 유데미 강의�
 ## 강의사이트
 https://www.udemy.com/course/android-architecture-componentsmvvm-with-dagger-retrofit/
 
+## 수강완료한 파트(진행사항)
+
+Data Binding
+Working With View Models
+Live Data
+View Model & Live Data With Data Binding
+
+
 ## 설명
 
 Become a highly qualified Professional Level Android Developer(In Kotlin & Java) by mastering most demanded Android skills of 2020!
