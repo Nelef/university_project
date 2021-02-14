@@ -102,6 +102,8 @@ class MainActivity : AppCompatActivity() {
             .addAction(replyAction) //바로 답장 작업 추가(reply action) 액션버튼
             .build()
         /* 3. 알림 표시*///---------------------------------------------------------------------------
+        //NotificationManagerCompat.notify()에 전달하는 알림 ID를 저장해야 합니다.
+        // 알림을 업데이트하거나 삭제하려면 나중에 필요하기 때문입니다.
         notificationManager?.notify(notificationId, notification) //노티실행
 
     }
@@ -118,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                 description = channelDescription
             }
             notificationManager?.createNotificationChannel(channel)
-        }else{
+        } else {
 
         }
 
