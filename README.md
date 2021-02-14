@@ -7,9 +7,14 @@ https://www.udemy.com/course/android-architecture-componentsmvvm-with-dagger-ret
 ## 수강완료한 파트(진행사항)
 
 Data Binding
+
 Working With View Models
+
 Live Data
+
 View Model & Live Data With Data Binding
+
+Kotlin Coroutines Fundamentals
 
 
 ## 설명
