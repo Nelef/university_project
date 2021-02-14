@@ -3,7 +3,9 @@ package com.anushka.notificationdemo
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -29,13 +31,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayNotification() {
         /* 1. 알림콘텐츠 설정*/
-        val notificationId = 45 //채널 ID
+        //채널 ID
+        val notificationId = 45
+        //알림의 탭 작업 설정
+        val tapResultIntent = Intent(this, SecondActivity::class.java).apply {
+            //현재 액티비티에서 새로운 액티비티를 실행한다면 현재 액티비티를 새로운 액티비티로 교체하는 플래그
+            flags = Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
+            //이전에 실행된 액티비티들을 모두 없엔 후 새로운 액티비티 실행 플래그
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            tapResultIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        //노티피케이션 생성
         val notification: Notification = NotificationCompat.Builder(this@MainActivity, channelID)
             .setContentTitle("Demo Title")
             .setContentText("This is a demo notification")
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setAutoCancel(true) // 사용자가 알림을 탭하면 자동으로 알림을 삭제합니다.
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
             .build()
         /* 3. 알림 표시*/
         notificationManager?.notify(notificationId, notification) //노티실행
