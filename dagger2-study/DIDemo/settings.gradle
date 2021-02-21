@@ -1,0 +1,2 @@
+rootProject.name='DIDemo'
+include ':app'
