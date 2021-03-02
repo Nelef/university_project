@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
+//contest 제공하는 모듈이고, 이 밑으로 액티비티, 프래그먼트들의 서브컴포넌트가 있다.
 @Module(subcomponents = [MovieSubComponent::class,TvShowSubComponent::class,ArtistSubComponent::class])
 class AppModule(private val context: Context) {
 

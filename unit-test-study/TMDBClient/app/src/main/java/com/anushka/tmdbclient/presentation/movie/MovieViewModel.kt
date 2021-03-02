@@ -8,7 +8,7 @@ import com.anushka.tmdbclient.domain.usecase.UpdateMoviesUsecase
 class MovieViewModel(
     private val getMoviesUseCase: GetMoviesUseCase,
     private val updateMoviesUsecase: UpdateMoviesUsecase
-): ViewModel() {
+) : ViewModel() {
 
     fun getMovies() = liveData {
         val movieList = getMoviesUseCase.execute()
@@ -20,7 +20,7 @@ class MovieViewModel(
         emit(movieList)
     }
 
-    }
+}
 
 
 

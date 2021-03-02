@@ -21,9 +21,4 @@ class FakeMovieRepository : MovieRepository {
         movies.add(Movie(4, "overview4", "path4", "date4", "title4"))
         return movies
     }
-
-
-
-
-
 }

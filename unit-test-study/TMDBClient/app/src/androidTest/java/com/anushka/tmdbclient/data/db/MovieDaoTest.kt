@@ -8,10 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.anushka.tmdbclient.data.model.movie.Movie
 import com.google.common.truth.Truth
 import kotlinx.coroutines.runBlocking
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
@@ -48,6 +45,8 @@ class MovieDaoTest {
 
         val allMovies = dao.getMovies()
         Truth.assertThat(allMovies).isEqualTo(movies)
+        Assert.assertThat("Aa")
+        Truth.assertThat(true).
     }
 
 

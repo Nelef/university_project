@@ -7,20 +7,22 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [
-AppModule::class,
-NetModule::class,
-DataBaseModule::class,
-UseCaseModule::class,
-RepositoryModule::class,
-RemoteDataModule::class,
-LocalDataModule::class,
-CacheDataModule::class
-])
-interface AppComponent {
+@Component(
+    modules = [
+        AppModule::class,
+        NetModule::class,
+        DataBaseModule::class,
+        UseCaseModule::class,
+        RepositoryModule::class,
+        RemoteDataModule::class,
+        LocalDataModule::class,
+        CacheDataModule::class
+    ]
+)
+interface AppComponent { //모듈들과 컴포넌트를 포함하고있음
 
-fun movieSubComponent():MovieSubComponent.Factory
-fun tvShowSubComponent():TvShowSubComponent.Factory
-fun artistSubComponent():ArtistSubComponent.Factory
+    fun movieSubComponent(): MovieSubComponent.Factory
+    fun tvShowSubComponent(): TvShowSubComponent.Factory
+    fun artistSubComponent(): ArtistSubComponent.Factory
 
 }

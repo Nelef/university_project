@@ -50,15 +50,6 @@ class MovieViewModelTest{
         assertThat(updatedList).isEqualTo(movies)
 
     }
-
-
-
-
-
-
-
-
-
 }
 
 
