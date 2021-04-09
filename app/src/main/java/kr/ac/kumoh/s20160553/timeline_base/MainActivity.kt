@@ -12,6 +12,9 @@ import androidx.core.view.setPadding
 
 class MainActivity : AppCompatActivity() {
 
+    // push test - 조남규
+    // yeah
+    
     val noteLayout: LinearLayout by lazy {
         findViewById<LinearLayout>(R.id.noteLayout)
     }
