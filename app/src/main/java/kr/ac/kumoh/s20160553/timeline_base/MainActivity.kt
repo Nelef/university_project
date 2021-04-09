@@ -9,7 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.edit
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
-
+//123
 class MainActivity : AppCompatActivity() {
 
     val noteLayout: LinearLayout by lazy {
