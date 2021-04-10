@@ -6,7 +6,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -70,6 +69,7 @@ class MainActivity : AppCompatActivity() {
             if (text == "")
                 return@setOnClickListener
 
+            noteCount++
             // 리스트에 EditText의 내용을 추가
             list.add(text)
 

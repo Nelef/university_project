@@ -17,9 +17,6 @@ class SimpleTextAdapter internal constructor(list: ArrayList<String>?) : Recycle
         init {
             // 뷰 객체에 대한 참조. (hold strong reference)
             textView1 = itemView.findViewById(R.id.item_textView)
-
-            // 여기에 클릭이벤트 생성 예정
-
         }
     }
 
@@ -46,4 +43,7 @@ class SimpleTextAdapter internal constructor(list: ArrayList<String>?) : Recycle
     init {
         mData = list
     }
+
+
+
 }

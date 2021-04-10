@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 이 파일은 RecyclerView의 각각 Item을 표현한 xml임. -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_height"
@@ -8,7 +7,6 @@
     android:layout_marginRight="@dimen/margin_medium"
     android:background="@android:drawable/dialog_holo_light_frame"
     android:gravity="center_vertical">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -36,4 +34,7 @@
             app:layout_constraintRight_toRightOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 </FrameLayout>
