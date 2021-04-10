@@ -1,9 +1,6 @@
 package kr.ac.kumoh.s20160553.timeline_base.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kr.ac.kumoh.s20160553.timeline_base.model.Note
 
 @Dao
@@ -13,6 +10,8 @@ interface NoteDao {
 
     @Query("SELECT COUNT(*) FROM note")
     fun countNote(): Int
+
+
 
     @Insert
     fun insertNote(note: Note)
