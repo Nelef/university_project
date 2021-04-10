@@ -7,5 +7,5 @@ import kr.ac.kumoh.s20160553.timeline_base.model.Note
 
 @Database(entities = [Note::class], version = 1)
 abstract class AppDatabase: RoomDatabase() {
-    abstract fun memoDao(): NoteDao
+    abstract fun noteDao(): NoteDao
 }

@@ -12,10 +12,10 @@ interface NoteDao {
     fun getAll(): List<Note>
 
     @Query("SELECT COUNT(*) FROM note")
-    fun countMemo(): Int
+    fun countNote(): Int
 
     @Insert
-    fun insertMemo(note: Note)
+    fun insertNote(note: Note)
 
     @Query("DELETE FROM note")
     fun deleteAll()

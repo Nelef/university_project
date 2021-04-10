@@ -2,6 +2,7 @@ package kr.ac.kumoh.s20160553.timeline_base
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -45,21 +46,21 @@ class MainActivity : AppCompatActivity() {
 
         //db 초기화
         db = Room.databaseBuilder(
-            application,
+            applicationContext,
             AppDatabase::class.java,
             "noteDB"
         ).build()
 
         //db에서 내용 불러오기
         Thread(Runnable {
-            noteCount = db.memoDao().countMemo()
-            noteList = db.memoDao().getAll()
-        })
-
-//        // SharedPreference로 불러온 텍스트 하나씩 추가
-        for( i in 0 until noteCount){
-            list.add(noteList[i].content.toString())
-        }
+            Log.d("load", "db loading")
+            noteCount = db.noteDao().countNote()
+            noteList = db.noteDao().getAll()
+            // SharedPreference로 불러온 텍스트 하나씩 추가
+            for (i in 0 until noteCount) {
+                list.add(noteList[i].content.toString())
+            }
+        }).start()
 
         // 추가 버튼 클릭 시
         addButton.setOnClickListener {
@@ -69,14 +70,14 @@ class MainActivity : AppCompatActivity() {
             if (text == "")
                 return@setOnClickListener
 
+            //DB에 메모 추가
+            Thread(Runnable {
+                db.noteDao().insertNote(Note(null, text))
+            }).start()
+
             noteCount++
             // 리스트에 EditText의 내용을 추가
             list.add(text)
-
-            //DB에 메모 추가
-            Thread(Runnable {
-                db.memoDao().insertMemo(Note(null, text))
-            })
 
             // 키보드 내리기
             val mInputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
