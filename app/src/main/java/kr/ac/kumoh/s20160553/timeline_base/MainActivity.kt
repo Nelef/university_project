@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import kr.ac.kumoh.s20160553.timeline_base.model.Note
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +31,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var noteCount: Int = 0
+    //db에 저장된 Note들 리스트
+    private lateinit var noteList: List<Note>
+
+    //db 변수
+    lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +44,22 @@ class MainActivity : AppCompatActivity() {
         // recyclerView를 위한 리스트
         val list = ArrayList<String>()
 
-        // SharedPreferences
-        val notePreferences = getSharedPreferences("myNote", Context.MODE_PRIVATE)
-        noteCount = notePreferences.getInt("count", 0)
+        //db 초기화
+        db = Room.databaseBuilder(
+            application,
+            AppDatabase::class.java,
+            "noteDB"
+        ).build()
 
-        // SharedPreference로 불러온 텍스트 하나씩 추가
+        //db에서 내용 불러오기
+        Thread(Runnable {
+            noteCount = db.memoDao().countMemo()
+            noteList = db.memoDao().getAll()
+        })
+
+//        // SharedPreference로 불러온 텍스트 하나씩 추가
         for( i in 0 until noteCount){
-            val text = notePreferences.getString("note$i", "fuck!").toString()
-            list.add(text)
+            list.add(noteList[i].content.toString())
         }
 
         // 추가 버튼 클릭 시
@@ -55,13 +70,13 @@ class MainActivity : AppCompatActivity() {
             if (text == "")
                 return@setOnClickListener
 
-            notePreferences.edit(true){
-                putInt("count", ++noteCount)
-                putString("note${noteCount - 1}", text)
-            }
-
             // 리스트에 EditText의 내용을 추가
-            list.add(String.format(noteEditText.text.toString()))
+            list.add(text)
+
+            //DB에 메모 추가
+            Thread(Runnable {
+                db.memoDao().insertMemo(Note(null, text))
+            })
 
             // 키보드 내리기
             val mInputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -82,7 +97,7 @@ class MainActivity : AppCompatActivity() {
         // 리사이클러뷰에 SimpleTextAdapter 객체 지정.
         val adapter = SimpleTextAdapter(list)
         recyclerView.adapter = adapter
-        
+
         // 리사이클러뷰를 사용하는 코드는 이 아래에 작성
     }
 }
