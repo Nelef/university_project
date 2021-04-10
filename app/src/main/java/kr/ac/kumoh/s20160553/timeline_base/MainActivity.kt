@@ -9,6 +9,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.edit
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
+import androidx.room.Room
+import kr.ac.kumoh.s20160553.timeline_base.model.Note
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,24 +27,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var noteCount: Int = 0
+    private lateinit var noteList: List<Note>
     private var listTextView = mutableListOf<TextView>()
     private lateinit var linearLayout: LinearLayout
+
+    lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val notePreferences = getSharedPreferences("myNote", Context.MODE_PRIVATE)
-        noteCount = notePreferences.getInt("count", 0)
+        db = Room.databaseBuilder(
+            application,
+            AppDatabase::class.java,
+            "noteDB"
+        ).build()
+
+        Thread(Runnable {
+            noteCount = db.memoDao().countMemo()
+            noteList = db.memoDao().getAll()
+        })
 
         for( i in 0 until noteCount){
-            if (i % 2 == 0){
-                linearLayout = LinearLayout(this)
-                noteLayout.addView(linearLayout)
-            }
-
-            val text = notePreferences.getString("note$i", "fuck!").toString()
-            addNote(text)
+            addNote(i, noteList[i].content.toString())
         }
 
         addButton.setOnClickListener {
@@ -50,21 +57,20 @@ class MainActivity : AppCompatActivity() {
             if (text == "")
                 return@setOnClickListener
 
-            if (noteCount % 2 == 0){
-                linearLayout = LinearLayout(this)
-                noteLayout.addView(linearLayout)
-            }
+            addNote(noteCount++, text)
 
-            addNote(text)
-
-            notePreferences.edit(true){
-                putInt("count", ++noteCount)
-                putString("note${noteCount - 1}", text)
-            }
+            Thread(Runnable {
+                db.memoDao().insertMemo(Note(null, text))
+            })
         }
     }
 
-    private fun addNote(text: String){
+    private fun addNote(i: Int, text: String){
+
+        if (i % 2 == 0){
+            linearLayout = LinearLayout(this)
+            noteLayout.addView(linearLayout)
+        }
 
         val noteTextView: TextView = TextView(this)
 
