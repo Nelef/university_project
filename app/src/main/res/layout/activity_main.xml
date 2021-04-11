@@ -40,6 +40,19 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/noteEditText"
+            app:layout_constraintEnd_toStartOf="@id/button_main2"
+            app:layout_constraintHorizontal_weight="1"
+            android:layout_marginRight="10dp"/>
+
+        <Button
+            android:id="@+id/button_main2"
+            android:text="클라우드 테스트"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/addButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"/>
 

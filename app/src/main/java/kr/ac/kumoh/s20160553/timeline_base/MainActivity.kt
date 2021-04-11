@@ -1,6 +1,7 @@
 package kr.ac.kumoh.s20160553.timeline_base
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
@@ -100,5 +101,16 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         // 리사이클러뷰를 사용하는 코드는 이 아래에 작성
+
+        //google cloud test
+        val main2 = findViewById<Button>(R.id.button_main2)
+        main2.setOnClickListener {
+            val intent = Intent(this, MainActivity2::class.java)
+            startActivity(intent)
+        }
     }
+
+
+
+
 }
