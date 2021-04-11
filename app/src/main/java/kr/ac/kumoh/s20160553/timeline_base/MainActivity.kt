@@ -1,87 +1,116 @@
 package kr.ac.kumoh.s20160553.timeline_base
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
-import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.edit
-import androidx.core.view.setMargins
-import androidx.core.view.setPadding
+import android.util.Log
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import kr.ac.kumoh.s20160553.timeline_base.model.Note
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    val noteLayout: LinearLayout by lazy {
-        findViewById<LinearLayout>(R.id.noteLayout)
-    }
-
+    // 추가 버튼
     val addButton: Button by lazy {
         findViewById<Button>(R.id.addButton)
     }
 
+    // 입력 창 (EditText)
     val noteEditText: EditText by lazy {
         findViewById<EditText>(R.id.noteEditText)
     }
 
+    // 삭제 버튼
+    val deleteButton: EditText by lazy {
+        findViewById<EditText>(R.id.item_button)
+    }
+
     private var noteCount: Int = 0
-    private var listTextView = mutableListOf<TextView>()
-    private lateinit var linearLayout: LinearLayout
+    //db에 저장된 Note들 리스트
+    private lateinit var noteList: List<Note>
+
+    //db 변수
+    lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val notePreferences = getSharedPreferences("myNote", Context.MODE_PRIVATE)
-        noteCount = notePreferences.getInt("count", 0)
+        // recyclerView를 위한 리스트
+        val list = ArrayList<String>()
 
-        for( i in 0 until noteCount){
-            if (i % 2 == 0){
-                linearLayout = LinearLayout(this)
-                noteLayout.addView(linearLayout)
+        //db 초기화
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "noteDB"
+        ).build()
+
+        //db에서 내용 불러오기
+        Thread(Runnable {
+            Log.d("load", "db loading")
+            noteCount = db.noteDao().countNote()
+            noteList = db.noteDao().getAll()
+            // SharedPreference로 불러온 텍스트 하나씩 추가
+            for (i in 0 until noteCount) {
+                list.add(noteList[i].content.toString())
             }
+        }).start()
 
-            val text = notePreferences.getString("note$i", "fuck!").toString()
-            addNote(text)
-        }
-
+        // 추가 버튼 클릭 시
         addButton.setOnClickListener {
             val text = noteEditText.text.toString()
+
+            // 아무것도 입력하지 않았을 경우
             if (text == "")
                 return@setOnClickListener
 
-            if (noteCount % 2 == 0){
-                linearLayout = LinearLayout(this)
-                noteLayout.addView(linearLayout)
-            }
+            //DB에 메모 추가
+            Thread(Runnable {
+                db.noteDao().insertNote(Note(null, text))
+            }).start()
 
-            addNote(text)
+            noteCount++
+            // 리스트에 EditText의 내용을 추가
+            list.add(text)
 
-            notePreferences.edit(true){
-                putInt("count", ++noteCount)
-                putString("note${noteCount - 1}", text)
-            }
+            // 키보드 내리기
+            val mInputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            mInputMethodManager.hideSoftInputFromWindow(noteEditText.getWindowToken(), 0)
+
+            // EditText 초기화
+            noteEditText.setText("")
+        }
+
+//        deleteButton.setOnClickListener {
+//
+//        }
+
+        // 리사이클러뷰에 LinearLayoutManager 객체 지정.
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        // 리사이클러뷰에 SimpleTextAdapter 객체 지정.
+        val adapter = SimpleTextAdapter(list)
+        recyclerView.adapter = adapter
+
+        // 리사이클러뷰를 사용하는 코드는 이 아래에 작성
+
+        //google cloud test
+        val main2 = findViewById<Button>(R.id.button_main2)
+        main2.setOnClickListener {
+            val intent = Intent(this, MainActivity2::class.java)
+            startActivity(intent)
         }
     }
 
-    private fun addNote(text: String){
 
-        val noteTextView: TextView = TextView(this)
 
-        val layoutParams = LinearLayout.LayoutParams(
-            0,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-        )
-        layoutParams.setMargins(20)
-        layoutParams.weight = 1F
-        noteTextView.gravity = Gravity.CENTER
-        noteTextView.setPadding(10)
-        noteTextView.layoutParams = layoutParams
-        noteTextView.setTextSize(25F)
-        noteTextView.setText(text)
-        noteTextView.layoutParams
-        noteTextView.setBackgroundResource(R.drawable.note_background)
-        listTextView.add(noteTextView)
-        linearLayout.addView(noteTextView)
-    }
+
 }
