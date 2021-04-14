@@ -1,7 +1,10 @@
 package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 
 class Memo_Input_Activity : AppCompatActivity() {
@@ -9,7 +12,21 @@ class Memo_Input_Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memo_input)
 
+        var editText:EditText = findViewById(R.id.editTextTextMultiLine)
+        var button_confirm:Button = findViewById(R.id.button_confirm)
+        var button_cancel:Button = findViewById(R.id.button_cancel)
+        var intent:Intent = intent
 
+        button_confirm.setOnClickListener {
+            // EditText의 내용을 TimelineFragment로 전달
+            var memo:String = editText.text.toString()
+            intent.putExtra("memo", memo)
+            setResult(RESULT_OK, intent)
+            finish()        // 액티비티 종료
+        }
 
+        button_cancel.setOnClickListener {
+            finish()        // 액티비티 종료
+        }
     }
 }

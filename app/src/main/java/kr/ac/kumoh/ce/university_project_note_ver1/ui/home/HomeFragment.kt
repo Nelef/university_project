@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.CalendarView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kr.ac.kumoh.ce.university_project_note_ver1.R
@@ -24,6 +25,7 @@ class HomeFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
+        val fragment2:Fragment
 
         var calendarView: CalendarView = root.findViewById<CalendarView>(R.id.calendarView)
 
@@ -35,6 +37,7 @@ class HomeFragment : Fragment() {
 
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             button1.text = dayOfMonth.toString()
+//            var fragmentTransaction:FragmentTransaction =
 
         }
 
