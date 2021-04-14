@@ -81,6 +81,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/button_add_memo"
+            app:layout_constraintRight_toRightOf="@id/button_drive"/>
+
+<!--        테스트용 드라이브 버튼-->
+        <Button
+            android:id="@+id/button_drive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="드라이브"
+            android:layout_margin="2dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/button_search_memo"
             app:layout_constraintRight_toRightOf="parent"/>
 
 

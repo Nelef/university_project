@@ -98,18 +98,6 @@ class TimelineFragment : Fragment() {
         val adapter = SimpleTextAdapter(list)
         recyclerView.adapter = adapter
 
-
-
-
-//        //google cloud test
-//        val main2 = findViewById<Button>(R.id.button_main2)
-//        main2.setOnClickListener {
-//            val intent = Intent(this, MainActivity2::class.java)
-//            startActivity(intent)
-//        }
-
-
-
         val button_add_memo:Button = root.findViewById(R.id.button_add_memo)
         button_add_memo.setOnClickListener {
             // 메모 추가 버튼 (실험중)
@@ -120,6 +108,14 @@ class TimelineFragment : Fragment() {
         val button_search_memo:Button = root.findViewById(R.id.button_search_memo)
         button_search_memo.setOnClickListener {
             // 메모 검색 버튼 (실험중)
+        }
+
+        //google drive test
+        val button_drive:Button = root.findViewById(R.id.button_drive)
+            //findViewById<Button>(R.id.button_main2)
+        button_drive.setOnClickListener {
+            val intent: Intent = Intent(root.context, Drive_save_activity::class.java)
+            startActivity(intent)
         }
 
         return root
