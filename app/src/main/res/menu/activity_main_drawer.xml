@@ -16,5 +16,9 @@
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_map" />
+        <item
+            android:id="@+id/nav_googledrive"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_googledrive" />
     </group>
 </menu>

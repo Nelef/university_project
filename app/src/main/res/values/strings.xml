@@ -8,6 +8,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_timeline">TIMELINE</string>
     <string name="menu_map">MAP</string>
+    <string name="menu_googledrive">GOOGLE DRIVE</string>
 
 
     <string name="addNote">Add Note</string>
@@ -15,5 +16,7 @@
 
     <string name="nav_header_title">MY TIMELINE ver. 0.1</string>
     <string name="nav_header_subtitle">창의설계프로젝트 3조</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

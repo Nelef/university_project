@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +20,6 @@ import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 
 class TimelineFragment : Fragment() {
-    public var testi = 3
     // DB에 저장된 노트의 개수
     private var noteCount:Int = 0
     // DB에 저장된 노트의 리스트
@@ -140,10 +140,7 @@ class TimelineFragment : Fragment() {
                 }
             }
         }
-
-
-
-
-
     }
+
+
 }
