@@ -11,10 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -22,7 +19,7 @@ import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 
 class TimelineFragment : Fragment() {
-
+    public var testi = 3
     // DB에 저장된 노트의 개수
     private var noteCount:Int = 0
     // DB에 저장된 노트의 리스트
@@ -36,9 +33,9 @@ class TimelineFragment : Fragment() {
     lateinit var recyclerView:RecyclerView
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_timeline, container, false)
@@ -61,7 +58,7 @@ class TimelineFragment : Fragment() {
             Log.d("load", "db loading")
             noteCount = db.noteDao().countNote()
             noteList = db.noteDao().getAll()
-            for (i in 0 until noteCount){
+            for (i in 0 until noteCount) {
                 list.add(noteList[i].content.toString())
             }
         }).start()
@@ -115,6 +112,7 @@ class TimelineFragment : Fragment() {
             //findViewById<Button>(R.id.button_main2)
         button_drive.setOnClickListener {
             val intent: Intent = Intent(root.context, Drive_save_activity::class.java)
+            intent.putExtra("list", list)
             startActivity(intent)
         }
 
