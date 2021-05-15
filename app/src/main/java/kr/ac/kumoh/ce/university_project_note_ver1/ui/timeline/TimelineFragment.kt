@@ -18,18 +18,18 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
+import java.time.LocalDateTime
 
 class TimelineFragment : Fragment() {
     // DB에 저장된 노트의 개수
     private var noteCount:Int = 0
     // DB에 저장된 노트의 리스트
-    private lateinit var noteList:List<Note>
+    private var noteList: MutableList<Note> = mutableListOf()
     // DB 변수
     lateinit var db: AppDatabase
 
     lateinit var noteEditText:EditText
     lateinit var addButton:Button
-    lateinit var list:ArrayList<String>
     lateinit var recyclerView:RecyclerView
 
     override fun onCreateView(
@@ -43,9 +43,6 @@ class TimelineFragment : Fragment() {
         addButton= root.findViewById(R.id.addButton)
         noteEditText = root.findViewById(R.id.noteEditText)
 
-        // RecyclerView에 들어갈 List
-        list = ArrayList()
-
         // DB 초기화
         db = Room.databaseBuilder(
             root.context,
@@ -57,9 +54,10 @@ class TimelineFragment : Fragment() {
         Thread(Runnable {
             Log.d("load", "db loading")
             noteCount = db.noteDao().countNote()
-            noteList = db.noteDao().getAll()
+            var tempNoteList = db.noteDao().getAll()
             for (i in 0 until noteCount) {
-                list.add(noteList[i].content.toString())
+                noteList.add(tempNoteList[i])
+                Log.d("Tag", tempNoteList[i].content!!)
             }
         }).start()
 
@@ -70,14 +68,14 @@ class TimelineFragment : Fragment() {
             // 입력칸이 빈 경우
             if(text == "") return@setOnClickListener
 
+            var tempNote = Note(null, false, text, 20210515, "타임스탬프")
+
             // DB에 메모 추가
             Thread(Runnable {
-                db.noteDao().insertNote(Note(null, text))
+                db.noteDao().insertNote(tempNote)
             }).start()
             noteCount++
-
-            // List에 EditText 내용 추가
-            list.add(text)
+            noteList.add(tempNote)
 
             // EditText 초기화
             noteEditText.setText("")
@@ -91,8 +89,7 @@ class TimelineFragment : Fragment() {
         recyclerView = root.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
-        // 리사이클러뷰에 SimpleTextAdapter 객체 지정.
-        val adapter = SimpleTextAdapter(list)
+        val adapter = NoteAdapter(noteList.toList())
         recyclerView.adapter = adapter
 
         val button_add_memo:Button = root.findViewById(R.id.button_add_memo)
@@ -112,7 +109,8 @@ class TimelineFragment : Fragment() {
             //findViewById<Button>(R.id.button_main2)
         button_drive.setOnClickListener {
             val intent: Intent = Intent(root.context, Drive_save_activity::class.java)
-            intent.putExtra("list", list)
+            //TODO change list to noteList
+//            intent.putExtra("list", list)
             startActivity(intent)
         }
 
@@ -127,12 +125,13 @@ class TimelineFragment : Fragment() {
                     val text_memo = data.getStringExtra("memo")
                     if(text_memo != ""){
                         // 입력이 빈칸이 아닐 때만 동작
-                        list.add(text_memo.toString())
-                        val adapter = SimpleTextAdapter(list)
+                        val tempNote = Note(null, false, text_memo.toString(), 20210515, "타임스탬프")
+                        noteList.add(tempNote)
+                        val adapter = NoteAdapter(noteList.toList())
                         recyclerView.adapter = adapter
 
                         Thread(Runnable {
-                            db.noteDao().insertNote(Note(null, text_memo))
+                            db.noteDao().insertNote(tempNote)
                         }).start()
                         noteCount++
 
@@ -141,6 +140,4 @@ class TimelineFragment : Fragment() {
             }
         }
     }
-
-
 }

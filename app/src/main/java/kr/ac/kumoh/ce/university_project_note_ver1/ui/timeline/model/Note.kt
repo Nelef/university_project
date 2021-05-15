@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey
 @Entity
 data class Note (
     @PrimaryKey val uid: Int?,
-    @ColumnInfo(name = "content") val content: String?
-    //, @ColumnInfo(name = "contentTime") val contentTime: String?
+    @ColumnInfo(name = "image_b") val image_b: Boolean,
+    @ColumnInfo(name = "content") val content: String?,
+    @ColumnInfo(name = "ymd") val ymd: Int,
+    @ColumnInfo(name = "time") val time: String?
 )
