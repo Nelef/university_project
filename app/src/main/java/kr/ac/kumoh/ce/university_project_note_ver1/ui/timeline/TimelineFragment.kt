@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +19,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.util.*
 
 class TimelineFragment : Fragment() {
     // DB에 저장된 노트의 개수
@@ -32,6 +35,15 @@ class TimelineFragment : Fragment() {
     lateinit var addButton:Button
     lateinit var recyclerView:RecyclerView
 
+
+    lateinit var calendarButton:Button
+    lateinit var selected_Time: TextView
+    lateinit var selected_year:String
+    lateinit var selected_Month:String
+    lateinit var selected_dayOfMonth:String
+
+    var selected_Time_DB:Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,24 +54,37 @@ class TimelineFragment : Fragment() {
 
         addButton= root.findViewById(R.id.addButton)
         noteEditText = root.findViewById(R.id.noteEditText)
+        calendarButton = root.findViewById(R.id.CalendarButton)
+        selected_Time = root.findViewById(R.id.selected_Time)
+
+        // 오늘 날짜 가져오기
+        val date: Date = Calendar.getInstance().time
+        selected_year = SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
+        selected_Month = SimpleDateFormat("MM", Locale.getDefault()).format(date)
+        selected_dayOfMonth = SimpleDateFormat("dd", Locale.getDefault()).format(date)
+//        selected_Time.text = selected_year + "년 " + selected_Month + "월 " + selected_dayOfMonth + "일"
+        selected_Time.text = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
+        selected_Time_DB = selected_year.toInt()*10000+selected_Month.toInt()*100+selected_dayOfMonth.toInt()
 
         // DB 초기화
         db = Room.databaseBuilder(
             root.context,
             AppDatabase::class.java,
-            "noteDB"
+            "noteDBa4"
         ).build()
 
         // DB에서 내용 불러오기
         Thread(Runnable {
             Log.d("load", "db loading")
             noteCount = db.noteDao().countNote()
-            var tempNoteList = db.noteDao().getAll()
+            val tempNoteList = db.noteDao().getAll()
             for (i in 0 until noteCount) {
                 noteList.add(tempNoteList[i])
                 Log.d("Tag", tempNoteList[i].content!!)
             }
         }).start()
+
+        noteList.sortByDescending { it.ymd }
 
         // 노트 추가
         addButton.setOnClickListener{
@@ -68,21 +93,33 @@ class TimelineFragment : Fragment() {
             // 입력칸이 빈 경우
             if(text == "") return@setOnClickListener
 
-            var tempNote = Note(null, false, text, 20210515, "타임스탬프")
+            val tempNote = Note(null, false, text, selected_Time_DB, "타임스탬프")
+            noteList.add(tempNote)
+
+            val adapter = NoteAdapter(noteList.toList())
+            recyclerView.adapter = adapter
+
+            noteList.sortByDescending { it.ymd }
 
             // DB에 메모 추가
             Thread(Runnable {
                 db.noteDao().insertNote(tempNote)
             }).start()
             noteCount++
-            noteList.add(tempNote)
 
             // EditText 초기화
             noteEditText.setText("")
 
+
+
             // 키보드 내리기
             val mInputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             mInputMethodManager.hideSoftInputFromWindow(noteEditText.getWindowToken(), 0)
+        }
+
+        calendarButton.setOnClickListener {
+            val intent = Intent(root.context, TimelineCalendarActivity::class.java)
+            startActivityForResult(intent, 2)
         }
 
         // 리사이클러뷰에 LinearLayoutManager 객체 지정.
@@ -95,7 +132,7 @@ class TimelineFragment : Fragment() {
         val button_add_memo:Button = root.findViewById(R.id.button_add_memo)
         button_add_memo.setOnClickListener {
             // 메모 추가 버튼 (실험중)
-            val intent: Intent = Intent(root.context, Memo_Input_Activity::class.java)
+            val intent = Intent(root.context, Memo_Input_Activity::class.java)
             startActivityForResult(intent, 1)
         }
 
@@ -106,9 +143,8 @@ class TimelineFragment : Fragment() {
 
         //google drive test
         val button_drive:Button = root.findViewById(R.id.button_drive)
-            //findViewById<Button>(R.id.button_main2)
         button_drive.setOnClickListener {
-            val intent: Intent = Intent(root.context, Drive_save_activity::class.java)
+            val intent = Intent(root.context, Drive_save_activity::class.java)
             //TODO change list to noteList
 //            intent.putExtra("list", list)
             startActivity(intent)
@@ -136,6 +172,22 @@ class TimelineFragment : Fragment() {
                         noteCount++
 
                     }
+                }
+            }
+            if(requestCode==2){
+                // 타임라인 화면에서 달력 버튼 클릭 시 달력 액티비티 Intent.
+                // 달력에서 날짜 선택 시 액티비티 종료
+                // 동시에 년, 월, 일 정보를 전달.
+                // 선택된 날짜를 사용하여 리스트를 변경
+                // 리스트 변경 방법
+                // 1. 리스트의 배열을 만들어서 가져옴 -> 메모리 사용이 클 것으로 예상됨
+                // 2. 해당 날짜의 리스트를 데이터베이스에서 다시 가져옴 -> 날짜별로 데이터베이스에 리스트를 저장해야함.
+                if(data != null){
+                    selected_year = data.getStringExtra("year").toString()
+                    selected_Month = data.getStringExtra("month").toString()
+                    selected_dayOfMonth = data.getStringExtra("dayOfMonth").toString()
+                    selected_Time.text = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
+                    selected_Time_DB = selected_year.toInt()*10000+selected_Month.toInt()*100+selected_dayOfMonth.toInt()
                 }
             }
         }

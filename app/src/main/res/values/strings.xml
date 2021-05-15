@@ -19,4 +19,18 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+
+    <string name="selected_day">SELECTED DAY : </string>
+    <string name="default_value">DEFAULT</string>
+    <string name="content_hint">내용을 입력하세요.</string>
+
+
+    <string name="timeline_calendar">달력</string>
+    <string name="timeline_add_memo">메모 추가</string>
+    <string name="timeline_search_memo">메모 검색</string>
+    <string name="timeline_google_drive">드라이브</string>
+    <!--    <string name=""></string>-->
+
+    <string name="year_month_day">%s년 %s월 %s일</string>
+
 </resources>

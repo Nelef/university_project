@@ -8,12 +8,140 @@
     tools:context=".ui.timeline.TimelineFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/topLayout"
+        android:id="@+id/menuBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/line1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/temp_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/selected_day"
+            android:textSize="20sp"
+            android:fontFamily="@font/malgun"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/selected_Time"/>
+
+        <TextView
+            android:id="@+id/selected_Time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/default_value"
+            android:fontFamily="@font/malgun"
+            android:textSize="20sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/temp_text"
+            app:layout_constraintRight_toLeftOf="@id/CalendarButton"/>
+
+        <Button
+            android:id="@+id/CalendarButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/timeline_calendar"
+            android:textSize="15sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/selected_Time"
+            app:layout_constraintRight_toRightOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/gray33"
+        app:layout_constraintTop_toBottomOf="@id/menuBarLayout"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line1"
+        app:layout_constraintBottom_toTopOf="@id/line2"/>
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/gray33"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/bottomLayout"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@id/line2"
+        app:layout_constraintBottom_toTopOf="@id/line3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+
+        <Button
+            android:id="@+id/button_add_memo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/timeline_add_memo"
+            android:layout_margin="2dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/button_search_memo"/>
+
+        <Button
+            android:id="@+id/button_search_memo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/timeline_search_memo"
+            android:layout_margin="2dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/button_add_memo"
+            app:layout_constraintRight_toRightOf="@id/button_drive"/>
+
+        <!--        테스트용 드라이브 버튼-->
+        <Button
+            android:id="@+id/button_drive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/timeline_google_drive"
+            android:layout_margin="2dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/button_search_memo"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/gray33"
+        app:layout_constraintTop_toBottomOf="@id/bottomLayout"
+        app:layout_constraintBottom_toTopOf="@+id/InputLayout"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/InputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        app:layout_constraintTop_toBottomOf="@id/line3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
@@ -21,6 +149,9 @@
             android:id="@+id/noteEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:hint="@string/content_hint"
+            android:autofillHints="@string/content_hint"
+            android:inputType="text"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -36,70 +167,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/noteEditText"
             app:layout_constraintRight_toRightOf="parent"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/white"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topLayout"
-        app:layout_constraintBottom_toTopOf="@id/bottomLayout"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottomLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-
-        <Button
-            android:id="@+id/button_add_memo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="메모 추가"
-            android:layout_margin="2dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/button_search_memo"/>
-
-        <Button
-            android:id="@+id/button_search_memo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="메모 검색"
-            android:layout_margin="2dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/button_add_memo"
-            app:layout_constraintRight_toRightOf="@id/button_drive"/>
-
-<!--        테스트용 드라이브 버튼-->
-        <Button
-            android:id="@+id/button_drive"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="드라이브"
-            android:layout_margin="2dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/button_search_memo"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
