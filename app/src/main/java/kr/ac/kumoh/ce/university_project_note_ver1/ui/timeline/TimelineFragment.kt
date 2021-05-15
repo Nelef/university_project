@@ -101,7 +101,7 @@ class TimelineFragment : Fragment() {
 
         val button_search_memo:Button = root.findViewById(R.id.button_search_memo)
         button_search_memo.setOnClickListener {
-            // 메모 검색 버튼 (실험중)
+            // 메모 검색 버튼 (실험중)2
         }
 
         //google drive test
