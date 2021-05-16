@@ -1,6 +1,7 @@
 package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
@@ -47,7 +48,7 @@ class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDat
         return ViewHolder(view)
     }
 
-    // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
+        // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val cNote = mData[position]
         holder.textView1.text = cNote.content.toString()
@@ -63,6 +64,8 @@ class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDat
             Thread(Runnable {
                 db.noteDao().delete(cNote)
             }).start()
+
+            notifyDataSetChanged()      // 데이터 변경 시 갱신하는 코드
 
         }
     }
