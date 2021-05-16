@@ -12,9 +12,16 @@ class Memo_Input_Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memo_input)
 
-        var editText:EditText = findViewById(R.id.editTextTextMultiLine)
-        var button_confirm:Button = findViewById(R.id.button_confirm)
-        var button_cancel:Button = findViewById(R.id.button_cancel)
+        val editText:EditText by lazy {
+            findViewById(R.id.editTextTextMultiLine)
+        }
+        val button_confirm:Button by lazy {
+            findViewById(R.id.button_confirm)
+        }
+        val button_cancel:Button by lazy {
+            findViewById(R.id.button_cancel)
+        }
+
         var intent:Intent = intent
 
         button_confirm.setOnClickListener {
