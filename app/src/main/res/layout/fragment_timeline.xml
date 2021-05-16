@@ -56,8 +56,8 @@
     <View
         android:id="@+id/line1"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/gray33"
+        android:layout_height="5dp"
+        android:background="@color/gray55"
         app:layout_constraintTop_toBottomOf="@id/menuBarLayout"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"/>
 
@@ -75,8 +75,8 @@
     <View
         android:id="@+id/line2"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/gray33"
+        android:layout_height="5dp"
+        android:background="@color/gray55"
         app:layout_constraintTop_toBottomOf="@id/recyclerView"
         app:layout_constraintBottom_toTopOf="@+id/bottomLayout"/>
 
@@ -89,7 +89,6 @@
         app:layout_constraintBottom_toTopOf="@id/line3"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
-
 
         <Button
             android:id="@+id/button_add_memo"
@@ -130,8 +129,8 @@
     <View
         android:id="@+id/line3"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/gray33"
+        android:layout_height="5dp"
+        android:background="@color/gray55"
         app:layout_constraintTop_toBottomOf="@id/bottomLayout"
         app:layout_constraintBottom_toTopOf="@+id/InputLayout"/>
 

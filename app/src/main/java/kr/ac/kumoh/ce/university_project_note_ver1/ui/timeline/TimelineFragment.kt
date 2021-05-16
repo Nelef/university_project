@@ -96,7 +96,7 @@ class TimelineFragment : Fragment() {
             val tempNote = Note(null, false, text, selected_Time_DB, "타임스탬프")
             noteList.add(tempNote)
 
-            val adapter = NoteAdapter(noteList.toList())
+            val adapter = NoteAdapter(noteList, db)
             recyclerView.adapter = adapter
 
             noteList.sortByDescending { it.ymd }
@@ -126,7 +126,8 @@ class TimelineFragment : Fragment() {
         recyclerView = root.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
-        val adapter = NoteAdapter(noteList.toList())
+//        val adapter = NoteAdapter(noteList.toList())
+        val adapter = NoteAdapter(noteList, db)
         recyclerView.adapter = adapter
 
         val button_add_memo:Button = root.findViewById(R.id.button_add_memo)
@@ -163,7 +164,7 @@ class TimelineFragment : Fragment() {
                         // 입력이 빈칸이 아닐 때만 동작
                         val tempNote = Note(null, false, text_memo.toString(), 20210515, "타임스탬프")
                         noteList.add(tempNote)
-                        val adapter = NoteAdapter(noteList.toList())
+                        val adapter = NoteAdapter(noteList, db)
                         recyclerView.adapter = adapter
 
                         Thread(Runnable {
