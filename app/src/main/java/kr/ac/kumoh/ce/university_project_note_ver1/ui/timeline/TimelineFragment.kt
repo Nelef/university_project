@@ -46,6 +46,9 @@ class TimelineFragment : Fragment() {
 
     var selected_Time_DB:Int = 0
 
+    val mFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val ymdFormat = SimpleDateFormat("yyyyMMdd")
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,6 +61,7 @@ class TimelineFragment : Fragment() {
         noteEditText = root.findViewById(R.id.noteEditText)
         calendarButton = root.findViewById(R.id.CalendarButton)
         selected_Time = root.findViewById(R.id.selected_Time)
+
 
         // 오늘 날짜 가져오기
         val date: Date = Calendar.getInstance().time
@@ -72,18 +76,13 @@ class TimelineFragment : Fragment() {
         db = Room.databaseBuilder(
             root.context,
             AppDatabase::class.java,
-            "noteDBa4da"
+            "noteDBa4"
         ).build()
 
         // DB에서 내용 불러오기
         Thread(Runnable {
-            Log.d("load", "db loading")
-            noteCount = db.noteDao().countNote2(selected_Time_DB)
-            val tempNoteList = db.noteDao().getAll2(selected_Time_DB)
-            for (i in 0 until noteCount) {
-                noteList.add(tempNoteList[i])
-                Log.d("Tag", tempNoteList[i].content!!)
-            }
+            noteCount = db.noteDao().countNote()
+            noteList.addAll(db.noteDao().getCertainDate(selected_Time_DB))
         }).start()
 
         noteList.sortByDescending { it.ymd }
@@ -95,7 +94,10 @@ class TimelineFragment : Fragment() {
             // 입력칸이 빈 경우
             if(text == "") return@setOnClickListener
 
-            val tempNote = Note(null, false, text, selected_Time_DB, "타임스탬프")
+            val mNow = System.currentTimeMillis()
+            val mReDate = Date(mNow)
+
+            val tempNote = Note(null, false, text, selected_Time_DB, mFormat.format(mReDate))
             noteList.add(tempNote)
 
             val adapter = NoteAdapter(noteList, db)
@@ -120,7 +122,7 @@ class TimelineFragment : Fragment() {
         }
 
         calendarButton.setOnClickListener {
-            val intent = Intent(root.context, TimelineCalendarActivity2::class.java)
+            val intent = Intent(root.context, TimelineCalendarActivity::class.java)
             startActivityForResult(intent, 2)
         }
 
@@ -168,7 +170,9 @@ class TimelineFragment : Fragment() {
                     val text_memo = data.getStringExtra("memo")
                     if(text_memo != ""){
                         // 입력이 빈칸이 아닐 때만 동작
-                        val tempNote = Note(null, false, text_memo.toString(), 20210515, "타임스탬프")
+                        val mNow = System.currentTimeMillis()
+                        val mReDate = Date(mNow)
+                        val tempNote = Note(null, false, text_memo.toString(), ymdFormat.format(mReDate).toInt(), mFormat.format(mReDate))
                         noteList.add(tempNote)
                         val adapter = NoteAdapter(noteList, db)
                         recyclerView.adapter = adapter
@@ -200,13 +204,8 @@ class TimelineFragment : Fragment() {
                     noteList.clear()
 
                     Thread(Runnable {
-                        Log.d("load", "db loading")
-                        noteCount = db.noteDao().countNote2(selected_Time_DB)
-                        val tempNoteList = db.noteDao().getAll2(selected_Time_DB)
-                        for (i in 0 until noteCount) {
-                            noteList.add(tempNoteList[i])
-                            Log.d("Tag", tempNoteList[i].content!!)
-                        }
+                        noteCount = db.noteDao().countCertainDateNote(selected_Time_DB)
+                        noteList.addAll(db.noteDao().getCertainDate(selected_Time_DB))
                     }).start()
 
                     val adapter = NoteAdapter(noteList, db)

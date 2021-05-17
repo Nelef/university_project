@@ -53,6 +53,7 @@ class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDat
         val cNote = mData[position]
         holder.textView1.text = cNote.content.toString()
         holder.recordTime.text = cNote.ymd.toString()
+            //holder.recordTime.text = cNote.time
         // 여기에 이미지뷰 내용 추가
 
 
