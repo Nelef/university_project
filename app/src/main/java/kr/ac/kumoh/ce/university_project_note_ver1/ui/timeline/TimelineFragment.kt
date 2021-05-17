@@ -118,7 +118,7 @@ class TimelineFragment : Fragment() {
         }
 
         calendarButton.setOnClickListener {
-            val intent = Intent(root.context, TimelineCalendarActivity::class.java)
+            val intent = Intent(root.context, TimelineCalendarActivity2::class.java)
             startActivityForResult(intent, 2)
         }
 
@@ -140,6 +140,8 @@ class TimelineFragment : Fragment() {
         val button_search_memo:Button = root.findViewById(R.id.button_search_memo)
         button_search_memo.setOnClickListener {
             // 메모 검색 버튼 (실험중)2
+            val intent = Intent(root.context, MemoSearchActivity::class.java)
+            startActivityForResult(intent, 3)
         }
 
         //google drive test
@@ -153,6 +155,8 @@ class TimelineFragment : Fragment() {
 
         return root
     }
+
+    lateinit var searchText:String
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -189,6 +193,15 @@ class TimelineFragment : Fragment() {
                     selected_dayOfMonth = data.getStringExtra("dayOfMonth").toString()
                     selected_Time.text = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
                     selected_Time_DB = selected_year.toInt()*10000+selected_Month.toInt()*100+selected_dayOfMonth.toInt()
+                }
+            }
+            if(requestCode==3){
+                // 검색 인텐트 종료 후 수행됨.
+                // 검색어 추출
+                if(data != null) {
+                    searchText = data.getStringExtra("searching").toString()
+//                    calendarButton.text = searchText
+                    // 아직 미구현
                 }
             }
         }

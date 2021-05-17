@@ -2,6 +2,7 @@ package kr.ac.kumoh.ce.university_project_note_ver1
 
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.Toolbar
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    var mBackWait:Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,4 +52,5 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
 }
