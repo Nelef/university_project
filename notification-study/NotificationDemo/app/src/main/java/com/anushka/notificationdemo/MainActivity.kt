@@ -95,13 +95,14 @@ class MainActivity : AppCompatActivity() {
             .setContentText("This is a demo notification") // 노티 내용
             .setSmallIcon(android.R.drawable.ic_dialog_info) //아이콘이미지
             .setAutoCancel(true) // 사용자가 알림을 탭하면 자동으로 알림을 삭제합니다.
+            .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent) //노티클릭시 인텐트작업
             .addAction(action2) //액션버튼 인텐트
             .addAction(action3)
             .addAction(replyAction) //바로 답장 작업 추가(reply action) 액션버튼
             .build()
-        /* 3. 알림 표시*///---------------------------------------------------------------------------
+        /* 3. 알림 표시*///--------------------------------------------------------------------------
         //NotificationManagerCompat.notify()에 전달하는 알림 ID를 저장해야 합니다.
         // 알림을 업데이트하거나 삭제하려면 나중에 필요하기 때문입니다.
         notificationManager?.notify(notificationId, notification) //노티실행
