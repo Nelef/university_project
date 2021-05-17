@@ -14,6 +14,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -70,14 +72,14 @@ class TimelineFragment : Fragment() {
         db = Room.databaseBuilder(
             root.context,
             AppDatabase::class.java,
-            "noteDBa4"
+            "noteDBa4da"
         ).build()
 
         // DB에서 내용 불러오기
         Thread(Runnable {
             Log.d("load", "db loading")
-            noteCount = db.noteDao().countNote()
-            val tempNoteList = db.noteDao().getAll()
+            noteCount = db.noteDao().countNote2(selected_Time_DB)
+            val tempNoteList = db.noteDao().getAll2(selected_Time_DB)
             for (i in 0 until noteCount) {
                 noteList.add(tempNoteList[i])
                 Log.d("Tag", tempNoteList[i].content!!)
@@ -193,6 +195,26 @@ class TimelineFragment : Fragment() {
                     selected_dayOfMonth = data.getStringExtra("dayOfMonth").toString()
                     selected_Time.text = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
                     selected_Time_DB = selected_year.toInt()*10000+selected_Month.toInt()*100+selected_dayOfMonth.toInt()
+
+
+                    noteList.clear()
+
+                    Thread(Runnable {
+                        Log.d("load", "db loading")
+                        noteCount = db.noteDao().countNote2(selected_Time_DB)
+                        val tempNoteList = db.noteDao().getAll2(selected_Time_DB)
+                        for (i in 0 until noteCount) {
+                            noteList.add(tempNoteList[i])
+                            Log.d("Tag", tempNoteList[i].content!!)
+                        }
+                    }).start()
+
+                    val adapter = NoteAdapter(noteList, db)
+                    recyclerView.adapter = adapter
+
+
+//                    refreshFragment(this, childFragmentManager)
+
                 }
             }
             if(requestCode==3){
@@ -206,4 +228,10 @@ class TimelineFragment : Fragment() {
             }
         }
     }
+
+//
+//    fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager) {
+//        var ft: FragmentTransaction = fragmentManager.beginTransaction()
+//        ft.detach(fragment).attach(fragment).commit()
+//    }
 }
