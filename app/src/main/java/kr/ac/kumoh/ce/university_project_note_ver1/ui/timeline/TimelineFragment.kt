@@ -12,46 +12,38 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 
 class TimelineFragment : Fragment() {
-    // DB에 저장된 노트의 개수
-    private var noteCount:Int = 0
-    // DB에 저장된 노트의 리스트
-    private var noteList: MutableList<Note> = mutableListOf()
-    // DB 변수
-    lateinit var db: AppDatabase
 
-    lateinit var noteEditText:EditText
-    lateinit var addButton:Button
-    lateinit var recyclerView:RecyclerView
+    private var noteCount:Int = 0                               // DB에 저장된 노트의 개수
+    private var noteList: MutableList<Note> = mutableListOf()   // DB에 저장된 노트의 리스트
+    lateinit var db: AppDatabase                                // DB 변수
 
+    lateinit var noteEditText:EditText                          // 노트 입력칸
+    lateinit var addButton:Button                               // 노트 입력 확인버튼
+    lateinit var recyclerView:RecyclerView                      // 노트 리스트 RecyclerView
 
-    lateinit var calendarButton:Button
-    lateinit var selected_Time: TextView
-    lateinit var selected_year:String
-    lateinit var selected_Month:String
-    lateinit var selected_dayOfMonth:String
+    lateinit var calendarButton:Button                          // 날짜 설정 액티비티 호출 버튼
+    lateinit var selected_Time: TextView                        // 설정된 날자를 표시할 TextView
+    lateinit var selected_year:String                           // 설정된 날짜의 해
+    lateinit var selected_Month:String                          // 설정된 날짜의 월
+    lateinit var selected_dayOfMonth:String                     // 설정된 날짜의 일
 
-    var selected_Time_DB:Int = 0
+    var selected_Time_DB:Int = 0                                // 설정된 날짜를 Int형으로 저장
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val root = inflater.inflate(R.layout.fragment_timeline, container, false)
 
         addButton= root.findViewById(R.id.addButton)
@@ -64,7 +56,6 @@ class TimelineFragment : Fragment() {
         selected_year = SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
         selected_Month = SimpleDateFormat("MM", Locale.getDefault()).format(date)
         selected_dayOfMonth = SimpleDateFormat("dd", Locale.getDefault()).format(date)
-//        selected_Time.text = selected_year + "년 " + selected_Month + "월 " + selected_dayOfMonth + "일"
         selected_Time.text = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
         selected_Time_DB = selected_year.toInt()*10000+selected_Month.toInt()*100+selected_dayOfMonth.toInt()
 
@@ -78,15 +69,15 @@ class TimelineFragment : Fragment() {
         // DB에서 내용 불러오기
         Thread(Runnable {
             Log.d("load", "db loading")
-            noteCount = db.noteDao().countNote2(selected_Time_DB)
-            val tempNoteList = db.noteDao().getAll2(selected_Time_DB)
+            noteCount = db.noteDao().countNoteSelectedTime(selected_Time_DB)
+            val tempNoteList = db.noteDao().getNoteListSelectedTime(selected_Time_DB)
             for (i in 0 until noteCount) {
                 noteList.add(tempNoteList[i])
                 Log.d("Tag", tempNoteList[i].content!!)
             }
         }).start()
 
-        noteList.sortByDescending { it.ymd }
+        noteList.sortByDescending { it.ymd }            // 날짜를 기준으로 리스트 정렬
 
         // 노트 추가
         addButton.setOnClickListener{
@@ -113,7 +104,6 @@ class TimelineFragment : Fragment() {
             noteEditText.setText("")
 
 
-
             // 키보드 내리기
             val mInputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             mInputMethodManager.hideSoftInputFromWindow(noteEditText.getWindowToken(), 0)
@@ -128,7 +118,6 @@ class TimelineFragment : Fragment() {
         recyclerView = root.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
-//        val adapter = NoteAdapter(noteList.toList())
         val adapter = NoteAdapter(noteList, db)
         recyclerView.adapter = adapter
 
@@ -154,7 +143,6 @@ class TimelineFragment : Fragment() {
 //            intent.putExtra("list", list)
             startActivity(intent)
         }
-
         return root
     }
 
@@ -182,27 +170,18 @@ class TimelineFragment : Fragment() {
                 }
             }
             if(requestCode==2){
-                // 타임라인 화면에서 달력 버튼 클릭 시 달력 액티비티 Intent.
-                // 달력에서 날짜 선택 시 액티비티 종료
-                // 동시에 년, 월, 일 정보를 전달.
-                // 선택된 날짜를 사용하여 리스트를 변경
-                // 리스트 변경 방법
-                // 1. 리스트의 배열을 만들어서 가져옴 -> 메모리 사용이 클 것으로 예상됨
-                // 2. 해당 날짜의 리스트를 데이터베이스에서 다시 가져옴 -> 날짜별로 데이터베이스에 리스트를 저장해야함.
                 if(data != null){
                     selected_year = data.getStringExtra("year").toString()
                     selected_Month = data.getStringExtra("month").toString()
                     selected_dayOfMonth = data.getStringExtra("dayOfMonth").toString()
                     selected_Time.text = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
                     selected_Time_DB = selected_year.toInt()*10000+selected_Month.toInt()*100+selected_dayOfMonth.toInt()
-
-
                     noteList.clear()
 
                     Thread(Runnable {
                         Log.d("load", "db loading")
-                        noteCount = db.noteDao().countNote2(selected_Time_DB)
-                        val tempNoteList = db.noteDao().getAll2(selected_Time_DB)
+                        noteCount = db.noteDao().countNoteSelectedTime(selected_Time_DB)
+                        val tempNoteList = db.noteDao().getNoteListSelectedTime(selected_Time_DB)
                         for (i in 0 until noteCount) {
                             noteList.add(tempNoteList[i])
                             Log.d("Tag", tempNoteList[i].content!!)
@@ -211,10 +190,6 @@ class TimelineFragment : Fragment() {
 
                     val adapter = NoteAdapter(noteList, db)
                     recyclerView.adapter = adapter
-
-
-//                    refreshFragment(this, childFragmentManager)
-
                 }
             }
             if(requestCode==3){
@@ -228,10 +203,4 @@ class TimelineFragment : Fragment() {
             }
         }
     }
-
-//
-//    fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager) {
-//        var ft: FragmentTransaction = fragmentManager.beginTransaction()
-//        ft.detach(fragment).attach(fragment).commit()
-//    }
 }

@@ -19,13 +19,13 @@ class TimelineCalendarActivity2 : AppCompatActivity() {
     lateinit var calendarView: CalendarView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)  // TitleBar 제거
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_timeline_calendar2)
 
-
-
-        var vDatePicker = findViewById<DatePicker>(R.id.vDatePicker)
-        var vDateEnter = findViewById<Button>(R.id.vDateEnter)
+        // ---------------- 스피너로 날짜 선택 ----------------
+        val vDatePicker = findViewById<DatePicker>(R.id.vDatePicker)
+        val vDateEnter = findViewById<Button>(R.id.vDateEnter)
 
         val cal = Calendar.getInstance()
         var mYear = cal.get(Calendar.YEAR).toString()
@@ -39,7 +39,7 @@ class TimelineCalendarActivity2 : AppCompatActivity() {
         })
 
         vDateEnter.setOnClickListener {
-            var intent = Intent()
+            val intent = Intent()
             intent.putExtra("year", mYear)
             intent.putExtra("month", (mMonth.toInt()+1).toString())
             intent.putExtra("dayOfMonth", mDay)
@@ -47,13 +47,12 @@ class TimelineCalendarActivity2 : AppCompatActivity() {
             finish()
         }
 
-        // ---------------- 달력으로 선택 ----------------
+        // ---------------- 달력으로 날짜 선택 ----------------
         calendarView = findViewById(R.id.calendarView)
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             val intent = Intent()
-            val temp = month+1
             intent.putExtra("year", year.toString())
-            intent.putExtra("month", temp.toString())
+            intent.putExtra("month", (month+1).toString())
             intent.putExtra("dayOfMonth", dayOfMonth.toString())
             setResult(RESULT_OK, intent)
             finish()
