@@ -11,8 +11,14 @@ interface NoteDao {
     @Query("SELECT * FROM note")
     fun getAll(): List<Note>
 
+    @Query("SELECT * FROM note WHERE ymd=:ymd")
+    fun getNoteListSelectedTime(ymd: Int): List<Note>
+
     @Query("SELECT COUNT(*) FROM note")
     fun countNote(): Int
+
+    @Query("SELECT COUNT(*) FROM note WHERE ymd=:ymd")
+    fun countNoteSelectedTime(ymd: Int): Int
 
     @Insert
     fun insertNote(note: Note)
