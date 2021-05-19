@@ -27,5 +27,6 @@
     <string name="addNote">Add Note</string>
 
     <string name="deleteButton">삭제</string>
+    <string name="get_img_error_msg">오류</string>
 
 </resources>

@@ -26,6 +26,13 @@
 
         <activity android:name=".ui.timeline.Drive_save_activity" />
         <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity android:name=".ui.timeline.GalleryActivity">
+            android:theme="@style/Theme.University_project_note_ver1.NoActionBar">
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.University_project_note_ver1.NoActionBar">
@@ -33,6 +40,9 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                android:name="com.yalantis.ucrop.UCropActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             </intent-filter>
         </activity>
     </application>

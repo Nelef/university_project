@@ -13,5 +13,17 @@
     <color name="grayAA">#AAAAAA</color>
     <color name="grayEE">#EEEEEE</color>
     <color name="mint">#aaf0d1</color>
+    <color name="blue">#0000ff</color>
+    <color name="red">#ff0000</color>
 
+    <color name="buttonGray">#f2f2f2</color>
+    <color name="buttonPressGray">#e2e2e2</color>
+    <color name="backgroundWhite">#fcfcfc</color>
+    <color name="textColor">#555555</color>
+    <color name="green">#7aaf3b</color>
+    <color name="greenPress">#618c2f</color>
+
+    <color name="gray_50">#808080</color>
+    <color name="gray_70">#4d4d4d</color>
+    <color name="gray_80">#333333</color>
 </resources>

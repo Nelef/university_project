@@ -135,6 +135,13 @@ class TimelineFragment : Fragment() {
             startActivityForResult(intent, 3)
         }
 
+        //갤러리버튼 기능 추가
+        val galleryButton = root.findViewById<Button>(R.id.galleryButton)
+        galleryButton.setOnClickListener {
+            val intent:Intent = Intent(root.context, GalleryActivity::class.java)
+            startActivityForResult(intent,1)
+        }
+
         //google drive test
         val button_drive:Button = root.findViewById(R.id.button_drive)
         button_drive.setOnClickListener {
@@ -154,6 +161,7 @@ class TimelineFragment : Fragment() {
             if(requestCode==1){
                 if (data != null) {
                     val text_memo = data.getStringExtra("memo")
+                    val image_memo=data.getStringExtra("image")
                     if(text_memo != ""){
                         // 입력이 빈칸이 아닐 때만 동작
                         val tempNote = Note(null, false, text_memo.toString(), 20210515, "타임스탬프")
@@ -166,6 +174,19 @@ class TimelineFragment : Fragment() {
                         }).start()
                         noteCount++
 
+                    }
+                    if(image_memo != ""){
+
+                        //val intent: Intent = getIntent()
+                        //val arr = getIntent().getByteArrayExtra("image")
+                        //image = decodeByteArray(arr, 0, arr.size)
+                        //val BigImage = findViewById(R.id.gallery_iv_image) as ImageView
+                        //BigImage.setImageBitmap(image)
+
+                        // Thread(Runnable {
+                        //    db.noteDao().insertNote(Note(null, image_memo))
+                        //}).start()
+                        //noteCount++
                     }
                 }
             }
