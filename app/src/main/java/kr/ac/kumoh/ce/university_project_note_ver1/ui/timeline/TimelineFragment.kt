@@ -135,14 +135,6 @@ class TimelineFragment : Fragment() {
             startActivityForResult(intent, 3)
         }
 
-        //google drive test
-        val button_drive:Button = root.findViewById(R.id.button_drive)
-        button_drive.setOnClickListener {
-            val intent = Intent(root.context, Drive_save_activity::class.java)
-            //TODO change list to noteList
-//            intent.putExtra("list", list)
-            startActivity(intent)
-        }
         return root
     }
 

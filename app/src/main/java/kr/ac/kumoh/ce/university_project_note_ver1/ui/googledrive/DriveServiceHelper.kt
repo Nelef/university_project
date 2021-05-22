@@ -1,4 +1,4 @@
-package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
+package kr.ac.kumoh.ce.university_project_note_ver1.ui.googledrive
 
 import android.content.ContentResolver
 import android.content.Intent

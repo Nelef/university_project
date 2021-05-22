@@ -1,6 +1,5 @@
 package kr.ac.kumoh.ce.university_project_note_ver1.ui.googledrive
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -24,13 +22,9 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.FileList
 import kr.ac.kumoh.ce.university_project_note_ver1.R
-import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.DriveServiceHelper
-import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.Drive_save_activity
 import java.util.ArrayList
 
 class GoogleDriveFragment : Fragment() {
-
-    lateinit var list: ArrayList<String>
     private var mDriveServiceHelper: DriveServiceHelper? = null
     private var mOpenFileId: String? = null
     private var mFileTitleEditText: EditText? = null
@@ -43,12 +37,6 @@ class GoogleDriveFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_google_drive, container, false)
-
-//        var intent:Intent = intent
-//        list = intent.getSerializableExtra("list") as ArrayList<String>
-//
-//        // 테스트용 토스트
-//        Toast.makeText(root.context, list.toString(), Toast.LENGTH_LONG).show()
 
         //파일 열기 / 생성 / 수정시 업데이트 할 EditText 상자를 저장합니다.
         mFileTitleEditText = root.findViewById(R.id.file_title_edittext)
@@ -116,7 +104,10 @@ class GoogleDriveFragment : Fragment() {
 
                 // DriveServiceHelper는 모든 REST API 및 SAF 기능을 캡슐화합니다.
                 // onClick 작업을 처리하기 전에 인스턴스화가 필요합니다.
-                mDriveServiceHelper = DriveServiceHelper(googleDriveService)
+                mDriveServiceHelper =
+                    DriveServiceHelper(
+                        googleDriveService
+                    )
             }
             .addOnFailureListener { exception: Exception? -> Log.e(GoogleDriveFragment.Companion.TAG, "Unable to sign in.", exception) }
     }
@@ -162,8 +153,8 @@ class GoogleDriveFragment : Fragment() {
             Log.d(GoogleDriveFragment.Companion.TAG, "Reading file $fileId")
             mDriveServiceHelper!!.readFile(fileId)
                 .addOnSuccessListener { nameAndContent: Pair<String, String> ->
-                    val name = nameAndContent.first // 이름
-                    val content = list.toString() // 내용
+                    val name = nameAndContent.first
+                    val content = nameAndContent.second
                     mFileTitleEditText!!.setText(name)
                     mDocContentEditText!!.setText(content)
                     setReadWriteMode(fileId)
