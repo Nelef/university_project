@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import kr.ac.kumoh.ce.university_project_note_ver1.R
@@ -40,7 +42,8 @@ class FingerprintFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        status = androidx.biometric.BiometricManager.from(this.requireContext()).canAuthenticate()
+        status = androidx.biometric.BiometricManager.from(this.requireContext())
+            .canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
 
         if (status == BiometricManager.BIOMETRIC_SUCCESS) {
             //사용가능
@@ -72,7 +75,7 @@ class FingerprintFragment : Fragment() {
             .setSubtitle("서브타이틀")
             .setDescription("설명")
             .setConfirmationRequired(false)
-            .setNegativeButtonText(getString(R.string.fingerprint_error_hw_not_available))
+            //.setNegativeButtonText(getString(R.string.fingerprint_error_hw_not_available))
             .build()
         return promptInfo
     }
