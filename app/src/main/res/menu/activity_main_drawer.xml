@@ -21,5 +21,9 @@
             android:id="@+id/nav_option"
             android:icon="@drawable/baseline_settings_applications_black"
             android:title="@string/menu_option" />
+        <item
+            android:id="@+id/nav_fingerprint"
+            android:icon="@drawable/baseline_settings_applications_black"
+            android:title="FINGERPRINT" />
     </group>
 </menu>
