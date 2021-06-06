@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDatabase) : RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
     private var mData: MutableList<Note>
@@ -49,7 +51,7 @@ class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDat
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val cNote = mData[position]
         holder.textView1.text = cNote.content.toString()
-        holder.recordTime.text = cNote.ymd.toString()
+        holder.recordTime.text = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(cNote.time)
         // 여기에 이미지뷰 내용 추가
 
         holder.deleteButton.setOnClickListener {

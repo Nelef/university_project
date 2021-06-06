@@ -10,5 +10,5 @@ data class Note (
     @ColumnInfo(name = "image_b") val image_b: Boolean,
     @ColumnInfo(name = "content") val content: String?,
     @ColumnInfo(name = "ymd") val ymd: Int,
-    @ColumnInfo(name = "time") val time: String?
+    @ColumnInfo(name = "time") val time: Long
 )

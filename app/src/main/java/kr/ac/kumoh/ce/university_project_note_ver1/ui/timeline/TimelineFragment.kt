@@ -86,7 +86,7 @@ class TimelineFragment : Fragment() {
             // 입력칸이 빈 경우
             if(text == "") return@setOnClickListener
 
-            val tempNote = Note(null, false, text, selected_Time_DB, "타임스탬프")
+            val tempNote = Note(null, false, text, selected_Time_DB, System.currentTimeMillis())
             noteList.add(tempNote)
 
             val adapter = NoteAdapter(noteList, db)
@@ -148,7 +148,7 @@ class TimelineFragment : Fragment() {
                     val text_memo = data.getStringExtra("memo")
                     if(text_memo != ""){
                         // 입력이 빈칸이 아닐 때만 동작
-                        val tempNote = Note(null, false, text_memo.toString(), 20210515, "타임스탬프")
+                        val tempNote = Note(null, false, text_memo.toString(), 20210515, System.currentTimeMillis())
                         noteList.add(tempNote)
                         val adapter = NoteAdapter(noteList, db)
                         recyclerView.adapter = adapter
