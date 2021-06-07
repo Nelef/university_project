@@ -1,14 +1,20 @@
 package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
 
+import android.app.NotificationManager
+import android.app.RemoteInput
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 
 class Memo_Input_Activity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)  // TitleBar 제거
         super.onCreate(savedInstanceState)
@@ -17,6 +23,7 @@ class Memo_Input_Activity : AppCompatActivity() {
         val editText:EditText by lazy {
             findViewById(R.id.editTextTextMultiLine)
         }
+
         val button_confirm:Button by lazy {
             findViewById(R.id.button_confirm)
         }

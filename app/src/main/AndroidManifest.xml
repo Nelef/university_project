@@ -23,8 +23,6 @@
         <activity
             android:name=".ui.timeline.Memo_Input_Activity"
             android:theme="@style/Theme.AppCompat.Dialog.MinWidth" />
-
-        <activity android:name=".ui.timeline.Drive_save_activity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -35,5 +33,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".NotificationReceiver"
+            android:enabled="true"
+            android:exported="false"></receiver>
     </application>
+
 </manifest>

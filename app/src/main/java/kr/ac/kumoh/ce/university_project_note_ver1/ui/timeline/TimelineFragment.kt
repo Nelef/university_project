@@ -1,6 +1,7 @@
 package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
 
 import android.app.Activity.RESULT_OK
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -14,6 +15,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +24,7 @@ import androidx.room.Room
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.text.SimpleDateFormat
+
 import java.util.*
 
 class TimelineFragment : Fragment() {
@@ -144,6 +148,8 @@ class TimelineFragment : Fragment() {
             intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
             startActivityForResult(intent, 4)
         }
+
+
 
         return root
     }
