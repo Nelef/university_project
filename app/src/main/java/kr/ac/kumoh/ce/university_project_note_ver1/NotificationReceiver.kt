@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.room.Room
+import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.AppDatabase
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.TimelineFragment
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.text.SimpleDateFormat
@@ -27,8 +29,14 @@ class NotificationReceiver : BroadcastReceiver() {
             val name = remoteInput.getCharSequence(MainActivity.NOTIFICATION_REPLY)
             val date = System.currentTimeMillis()
 
+            var db = Room.databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                "noteDBa4d5aa"
+            ).build()
+
             Thread(Runnable {
-                TimelineFragment.Companion.db.noteDao().insertNote(Note(null, false, name.toString(), SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date, ""))
+                db.noteDao().insertNote(Note(null, false, name.toString(), SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date, ""))
                 Log.d("알림", name.toString())
             }).start()
 
