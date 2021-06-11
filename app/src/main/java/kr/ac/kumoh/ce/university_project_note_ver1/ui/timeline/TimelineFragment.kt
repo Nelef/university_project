@@ -29,9 +29,12 @@ import java.util.*
 
 class TimelineFragment : Fragment() {
 
+    companion object{
+        lateinit var db: AppDatabase                                // DB 변수
+    }
+
     private var noteCount:Int = 0                               // DB에 저장된 노트의 개수
     private var noteList: MutableList<Note> = mutableListOf()   // DB에 저장된 노트의 리스트
-    lateinit var db: AppDatabase                                // DB 변수
 
     lateinit var noteEditText:EditText                          // 노트 입력칸
     lateinit var addButton:Button                               // 노트 입력 확인버튼
