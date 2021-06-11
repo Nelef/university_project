@@ -9,6 +9,7 @@ import kr.ac.kumoh.ce.university_project_note_ver1.R
 
 class MapFragment : Fragment() {
 
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,

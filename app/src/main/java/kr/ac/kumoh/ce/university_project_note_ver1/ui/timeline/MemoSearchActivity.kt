@@ -1,5 +1,7 @@
 package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
 
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +14,8 @@ class MemoSearchActivity : AppCompatActivity() {
 
 //    lateinit var searchEditText:EditText
 //    lateinit var searchButton: Button
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)  // TitleBar 제거
@@ -28,5 +32,8 @@ class MemoSearchActivity : AppCompatActivity() {
             setResult(RESULT_OK, intent)
             finish()
         }
+
+
+
     }
 }
