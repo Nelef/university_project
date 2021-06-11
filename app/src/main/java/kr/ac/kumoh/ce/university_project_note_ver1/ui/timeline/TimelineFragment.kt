@@ -198,15 +198,31 @@ class TimelineFragment : Fragment() {
 
                     val adapter = NoteAdapter(noteList, db)
                     recyclerView.adapter = adapter
+
+                    noteEditText.isClickable = true
+                    noteEditText.isEnabled = true
                 }
             }
             if(requestCode==3){
                 // 검색 인텐트 종료 후 수행됨.
                 // 검색어 추출
                 if(data != null) {
-                    searchText = data.getStringExtra("searching").toString()
-//                    calendarButton.text = searchText
-                    // 아직 미구현
+                    searchText = data.getStringExtra("searchText").toString()
+                    selected_Time.text = "${searchText} 검색결과"
+                    noteEditText.isClickable = false
+                    noteEditText.isEnabled = false
+
+                    Thread(Runnable {
+                        val tempNoteList = db.noteDao().findByResult("%$searchText%")
+                        noteList.clear()
+                        Log.d("$searchText 검색", tempNoteList.toString())
+                        for (i in 0 until tempNoteList.size) {
+                            noteList.add(tempNoteList[i])
+                        }
+                    }).start()
+
+                    val adapter = NoteAdapter(noteList, db)
+                    recyclerView.adapter = adapter
                 }
             }
             if (requestCode==4){
@@ -224,7 +240,6 @@ class TimelineFragment : Fragment() {
                         db.noteDao().insertNote(tempNote)
                     }).start()
                     noteCount++
-
                 }
             }
         }

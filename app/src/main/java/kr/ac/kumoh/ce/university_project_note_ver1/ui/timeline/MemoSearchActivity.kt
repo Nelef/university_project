@@ -28,7 +28,7 @@ class MemoSearchActivity : AppCompatActivity() {
 
         searchButton.setOnClickListener {
             val intent = Intent()
-            intent.putExtra("searching", searchEditText.text)
+            intent.putExtra("searchText", searchEditText.text.toString())
             setResult(RESULT_OK, intent)
             finish()
         }
