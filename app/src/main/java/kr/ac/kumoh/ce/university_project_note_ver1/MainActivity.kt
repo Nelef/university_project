@@ -61,6 +61,8 @@ class MainActivity : AppCompatActivity() {
             mNotificationManager.createNotificationChannel(mChannel)
         }
         displayNotification()
+
+        instance = this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -76,38 +78,33 @@ class MainActivity : AppCompatActivity() {
 
     //reply test
     fun displayNotification() {
-
         //Pending intent for a notification button help
         val helpPendingIntent = PendingIntent.getBroadcast(
             this@MainActivity,
             REQUEST_CODE_HELP,
-            Intent(this@MainActivity, NotificationReceiver::class.java)
-                .putExtra(KEY_INTENT_HELP, REQUEST_CODE_HELP),
+            Intent(this@MainActivity, NotificationReceiver::class.java).putExtra(KEY_INTENT_HELP, REQUEST_CODE_HELP),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-
         //We need this object for getting direct input from notification
         val remoteInput = RemoteInput.Builder(NOTIFICATION_REPLY)
-            .setLabel("Please enter your name")
+            .setLabel("메모를 입력하세요..")
             .build()
-
 
         //For the remote input we need this action object
         val action = NotificationCompat.Action.Builder(android.R.drawable.ic_delete,
-            "Reply Now...", helpPendingIntent)
+            "메모를 입력하세요..", helpPendingIntent)
             .addRemoteInput(remoteInput)
             .build()
 
         //Creating the notifiction builder object
         val mBuilder = NotificationCompat.Builder(this, CHANNNEL_ID)
             .setSmallIcon(android.R.drawable.ic_dialog_email)
-            .setContentTitle("Hey this is Simplified Coding...")
-            .setContentText("Please share your name with us")
-            .setAutoCancel(true)
+            .setContentTitle("TIMELINE 간편메모")
+            .setContentText("메모입력")
             .setContentIntent(helpPendingIntent)
             .addAction(action)
-
+            .setOngoing(true) // 사용자가 직접 못지우게 계속 실행하기.
 
         //finally displaying the notification
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -124,6 +121,8 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_MORE = 100
         const val REQUEST_CODE_HELP = 101
         const val NOTIFICATION_ID = 200
+
+        lateinit var instance:MainActivity
     }
 
 }
