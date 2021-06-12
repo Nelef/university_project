@@ -29,7 +29,6 @@ interface NoteDao {
     @Delete
     fun delete(note: Note)
 
-//    @Query("SELECT * FROM history WHERE result LIKE :result LIMIT 1")
-//    fun findByResult(result: String)
-
+    @Query("SELECT * FROM note WHERE content LIKE :search")
+    fun findByResult(search: String): List<Note>
 }

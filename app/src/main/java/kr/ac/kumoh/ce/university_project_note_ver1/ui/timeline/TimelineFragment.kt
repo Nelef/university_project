@@ -29,9 +29,12 @@ import java.util.*
 
 class TimelineFragment : Fragment() {
 
+    companion object{
+        lateinit var db: AppDatabase                                // DB 변수
+    }
+
     private var noteCount:Int = 0                               // DB에 저장된 노트의 개수
     private var noteList: MutableList<Note> = mutableListOf()   // DB에 저장된 노트의 리스트
-    lateinit var db: AppDatabase                                // DB 변수
 
     lateinit var noteEditText:EditText                          // 노트 입력칸
     lateinit var addButton:Button                               // 노트 입력 확인버튼
@@ -198,15 +201,31 @@ class TimelineFragment : Fragment() {
 
                     val adapter = NoteAdapter(noteList, db)
                     recyclerView.adapter = adapter
+
+                    noteEditText.isClickable = true
+                    noteEditText.isEnabled = true
                 }
             }
             if(requestCode==3){
                 // 검색 인텐트 종료 후 수행됨.
                 // 검색어 추출
                 if(data != null) {
-                    searchText = data.getStringExtra("searching").toString()
-//                    calendarButton.text = searchText
-                    // 아직 미구현
+                    searchText = data.getStringExtra("searchText").toString()
+                    selected_Time.text = "${searchText} 검색결과"
+                    noteEditText.isClickable = false
+                    noteEditText.isEnabled = false
+
+                    Thread(Runnable {
+                        val tempNoteList = db.noteDao().findByResult("%$searchText%")
+                        noteList.clear()
+                        Log.d("$searchText 검색", tempNoteList.toString())
+                        for (i in 0 until tempNoteList.size) {
+                            noteList.add(tempNoteList[i])
+                        }
+                    }).start()
+
+                    val adapter = NoteAdapter(noteList, db)
+                    recyclerView.adapter = adapter
                 }
             }
             if (requestCode==4){
@@ -224,7 +243,6 @@ class TimelineFragment : Fragment() {
                         db.noteDao().insertNote(tempNote)
                     }).start()
                     noteCount++
-
                 }
             }
         }
