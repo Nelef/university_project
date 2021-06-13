@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="kr.ac.kumoh.ce.university_project_note_ver1">
     <!-- google drive -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -13,7 +14,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:screenOrientation = 'portrait'
         android:theme="@style/Theme.University_project_note_ver1">
+
         <activity
             android:name=".ui.timeline.MemoSearchActivity"
             android:theme="@style/Theme.AppCompat.Dialog.MinWidth" />
@@ -24,14 +27,17 @@
             android:name=".ui.timeline.Memo_Input_Activity"
             android:theme="@style/Theme.AppCompat.Dialog.MinWidth" />
 
+
         <activity android:name=".ui.timeline.Drive_save_activity" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+
         <activity android:name=".ui.timeline.GalleryActivity">
             android:theme="@style/Theme.University_project_note_ver1.NoActionBar">
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

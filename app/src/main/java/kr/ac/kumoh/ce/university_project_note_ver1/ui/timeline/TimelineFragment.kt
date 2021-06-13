@@ -3,7 +3,13 @@ package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.getIntent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.BitmapFactory.decodeByteArray
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,49 +27,51 @@ import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.text.SimpleDateFormat
 import java.util.*
 
+@Suppress("DEPRECATION")
 class TimelineFragment : Fragment() {
 
-    private var noteCount:Int = 0                               // DB에 저장된 노트의 개수
+    private var noteCount: Int = 0                               // DB에 저장된 노트의 개수
     private var noteList: MutableList<Note> = mutableListOf()   // DB에 저장된 노트의 리스트
     lateinit var db: AppDatabase                                // DB 변수
 
-    lateinit var noteEditText:EditText                          // 노트 입력칸
-    lateinit var addButton:Button                               // 노트 입력 확인버튼
-    lateinit var recyclerView:RecyclerView                      // 노트 리스트 RecyclerView
+    lateinit var noteEditText: EditText                          // 노트 입력칸
+    lateinit var addButton: Button                               // 노트 입력 확인버튼
+    lateinit var recyclerView: RecyclerView                      // 노트 리스트 RecyclerView
 
-    lateinit var calendarButton:Button                          // 날짜 설정 액티비티 호출 버튼
+    lateinit var calendarButton: Button                          // 날짜 설정 액티비티 호출 버튼
     lateinit var selected_Time: TextView                        // 설정된 날자를 표시할 TextView
-    lateinit var selected_year:String                           // 설정된 날짜의 해
-    lateinit var selected_Month:String                          // 설정된 날짜의 월
-    lateinit var selected_dayOfMonth:String                     // 설정된 날짜의 일
+    lateinit var selected_year: String                           // 설정된 날짜의 해
+    lateinit var selected_Month: String                          // 설정된 날짜의 월
+    lateinit var selected_dayOfMonth: String
+    lateinit var sendButton: Button
 
-    var selected_Time_DB:Int = 0                                // 설정된 날짜를 Int형으로 저장
+    var selected_Time_DB: Int = 0                                // 설정된 날짜를 Int형으로 저장
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_timeline, container, false)
 
-        addButton= root.findViewById(R.id.addButton)
+        addButton = root.findViewById(R.id.addButton)
         noteEditText = root.findViewById(R.id.noteEditText)
         calendarButton = root.findViewById(R.id.CalendarButton)
         selected_Time = root.findViewById(R.id.selected_Time)
-
+        //sendButton = root.findViewById(R.id.gallery_btn_send)
         // 오늘 날짜 가져오기
         val date: Date = Calendar.getInstance().time
         selected_year = SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
         selected_Month = SimpleDateFormat("MM", Locale.getDefault()).format(date)
         selected_dayOfMonth = SimpleDateFormat("dd", Locale.getDefault()).format(date)
         selected_Time.text = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
-        selected_Time_DB = selected_year.toInt()*10000+selected_Month.toInt()*100+selected_dayOfMonth.toInt()
+        selected_Time_DB = selected_year.toInt() * 10000 + selected_Month.toInt() * 100 + selected_dayOfMonth.toInt()
 
         // DB 초기화
         db = Room.databaseBuilder(
-            root.context,
-            AppDatabase::class.java,
-            "noteDBa4da"
+                root.context,
+                AppDatabase::class.java,
+                "noteDBa4da"
         ).build()
 
         // DB에서 내용 불러오기
@@ -80,13 +88,13 @@ class TimelineFragment : Fragment() {
         noteList.sortByDescending { it.ymd }            // 날짜를 기준으로 리스트 정렬
 
         // 노트 추가
-        addButton.setOnClickListener{
+        addButton.setOnClickListener {
             val text = noteEditText.text.toString()
 
             // 입력칸이 빈 경우
-            if(text == "") return@setOnClickListener
+            if (text == "") return@setOnClickListener
 
-            val tempNote = Note(null, false, text, selected_Time_DB, "타임스탬프")
+            val tempNote = Note(null, false, text, selected_Time_DB, System.currentTimeMillis(), "")
             noteList.add(tempNote)
 
             val adapter = NoteAdapter(noteList, db)
@@ -121,14 +129,14 @@ class TimelineFragment : Fragment() {
         val adapter = NoteAdapter(noteList, db)
         recyclerView.adapter = adapter
 
-        val button_add_memo:Button = root.findViewById(R.id.button_add_memo)
+        val button_add_memo: Button = root.findViewById(R.id.button_add_memo)
         button_add_memo.setOnClickListener {
             // 메모 추가 버튼 (실험중)
             val intent = Intent(root.context, Memo_Input_Activity::class.java)
             startActivityForResult(intent, 1)
         }
 
-        val button_search_memo:Button = root.findViewById(R.id.button_search_memo)
+        val button_search_memo: Button = root.findViewById(R.id.button_search_memo)
         button_search_memo.setOnClickListener {
             // 메모 검색 버튼 (실험중)2
             val intent = Intent(root.context, MemoSearchActivity::class.java)
@@ -138,12 +146,13 @@ class TimelineFragment : Fragment() {
         //갤러리버튼 기능 추가
         val galleryButton = root.findViewById<Button>(R.id.galleryButton)
         galleryButton.setOnClickListener {
-            val intent:Intent = Intent(root.context, GalleryActivity::class.java)
-            startActivityForResult(intent,1)
-        }
+            val intent = Intent(root.context, GalleryActivity::class.java)
+            startActivityForResult(intent, 4)
+            }
+
 
         //google drive test
-        val button_drive:Button = root.findViewById(R.id.button_drive)
+        val button_drive: Button = root.findViewById(R.id.button_drive)
         button_drive.setOnClickListener {
             val intent = Intent(root.context, Drive_save_activity::class.java)
             //TODO change list to noteList
@@ -153,18 +162,17 @@ class TimelineFragment : Fragment() {
         return root
     }
 
-    lateinit var searchText:String
+    lateinit var searchText: String
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode==RESULT_OK){
-            if(requestCode==1){
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
                 if (data != null) {
                     val text_memo = data.getStringExtra("memo")
-                    val image_memo=data.getStringExtra("image")
-                    if(text_memo != ""){
+                    if (text_memo != "") {
                         // 입력이 빈칸이 아닐 때만 동작
-                        val tempNote = Note(null, false, text_memo.toString(), 20210515, "타임스탬프")
+                        val tempNote = Note(null, false, text_memo.toString(), 20210515, System.currentTimeMillis(), "")
                         noteList.add(tempNote)
                         val adapter = NoteAdapter(noteList, db)
                         recyclerView.adapter = adapter
@@ -175,28 +183,15 @@ class TimelineFragment : Fragment() {
                         noteCount++
 
                     }
-                    if(image_memo != ""){
-
-                        //val intent: Intent = getIntent()
-                        //val arr = getIntent().getByteArrayExtra("image")
-                        //image = decodeByteArray(arr, 0, arr.size)
-                        //val BigImage = findViewById(R.id.gallery_iv_image) as ImageView
-                        //BigImage.setImageBitmap(image)
-
-                        // Thread(Runnable {
-                        //    db.noteDao().insertNote(Note(null, image_memo))
-                        //}).start()
-                        //noteCount++
-                    }
                 }
             }
-            if(requestCode==2){
-                if(data != null){
+            if (requestCode == 2) {
+                if (data != null) {
                     selected_year = data.getStringExtra("year").toString()
                     selected_Month = data.getStringExtra("month").toString()
                     selected_dayOfMonth = data.getStringExtra("dayOfMonth").toString()
                     selected_Time.text = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
-                    selected_Time_DB = selected_year.toInt()*10000+selected_Month.toInt()*100+selected_dayOfMonth.toInt()
+                    selected_Time_DB = selected_year.toInt() * 10000 + selected_Month.toInt() * 100 + selected_dayOfMonth.toInt()
                     noteList.clear()
 
                     Thread(Runnable {
@@ -213,13 +208,33 @@ class TimelineFragment : Fragment() {
                     recyclerView.adapter = adapter
                 }
             }
-            if(requestCode==3){
+            if (requestCode == 3) {
                 // 검색 인텐트 종료 후 수행됨.
                 // 검색어 추출
-                if(data != null) {
+                if (data != null) {
                     searchText = data.getStringExtra("searching").toString()
 //                    calendarButton.text = searchText
                     // 아직 미구현
+                }
+            }
+            if (requestCode == 4) {
+                // 이미지 추가 인텐트 종료 후 수행됨.
+                if (data != null) {
+                    val temp_uri= data.getStringExtra("image")
+                    val ImageUri = Uri.parse(temp_uri.toString())
+
+
+                    val tempNote = Note(null, false, "", selected_Time_DB, System.currentTimeMillis(), ImageUri.toString())
+                    noteList.add(tempNote)
+                    val adapter = NoteAdapter(noteList, db)
+                    recyclerView.adapter = adapter
+
+                    Thread(Runnable {
+                        db.noteDao().insertNote(tempNote)
+                    }).start()
+                    noteCount++
+
+
                 }
             }
         }

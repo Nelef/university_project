@@ -2,6 +2,7 @@ package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
@@ -50,6 +51,9 @@ class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDat
         val cNote = mData[position]
         holder.textView1.text = cNote.content.toString()
         holder.recordTime.text = cNote.ymd.toString()
+        if(cNote.image!="") {
+            holder.itemImageView.setImageURI(Uri.parse(cNote.image.toString()))
+        }
         // 여기에 이미지뷰 내용 추가
 
         holder.deleteButton.setOnClickListener {

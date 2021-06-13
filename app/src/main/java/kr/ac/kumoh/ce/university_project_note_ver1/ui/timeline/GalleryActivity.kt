@@ -49,16 +49,24 @@ class GalleryActivity : AppCompatActivity() {
             //val intent = Intent(getApplicationContext(), TimelineFragment::class.java)
             //val sendBitmap = BitmapFactory.decodeResource(getResources(), R.id.gallery_iv_image)
             //val stream = ByteArrayOutputStream()
-            //        sendBitmap.compress(CompressFormat.JPEG, 100, stream)
+                    //sendBitmap.compress(CompressFormat.JPEG, 100, stream)
             //val byteArray = stream.toByteArray()
             //intent.putExtra("image", byteArray)
             //startActivity(intent)
-
-
+                //val intent =Intent(Intent.ACTION_PICK)
+                //intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
+                //startActivityForResult(intent, 4)
+            //val intent = Intent(getApplicationContext(),TimelineFragment::class.java)
+            //intent.putExtra("image",imageUri)
+            //startActivityForResult(intent,4)
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.putExtra("image",imageUri.toString())
+            setResult(RESULT_OK, intent)
+            finish()
         }
         indicateButton.setOnClickListener{
             Glide.with(this)
-                .load(imageUri)
+                .load(imageUri.toString())
                 .fitCenter()
                 .override(200,200)
                 .into(imageView)
