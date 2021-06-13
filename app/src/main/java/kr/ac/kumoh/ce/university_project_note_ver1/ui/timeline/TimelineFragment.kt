@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.text.SimpleDateFormat
@@ -48,6 +49,7 @@ class TimelineFragment : Fragment() {
     lateinit var selected_dayOfMonth:String                     // 설정된 날짜의 일
 
     var selected_Time_DB:Int = 0                                // 설정된 날짜를 Int형으로 저장
+    var selected_Time_String:String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,14 +69,15 @@ class TimelineFragment : Fragment() {
         selected_year = SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
         selected_Month = SimpleDateFormat("MM", Locale.getDefault()).format(date)
         selected_dayOfMonth = SimpleDateFormat("dd", Locale.getDefault()).format(date)
-        selected_Time.text = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
+        selected_Time_String = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
+        selected_Time.text = selected_Time_String
         selected_Time_DB = selected_year.toInt()*10000+selected_Month.toInt()*100+selected_dayOfMonth.toInt()
 
         // DB 초기화
         db = Room.databaseBuilder(
             root.context,
             AppDatabase::class.java,
-            "noteDBa4d5aa"
+            "noteDBa4d5aaa"
         ).build()
 
         // DB에서 내용 불러오기
@@ -132,12 +135,12 @@ class TimelineFragment : Fragment() {
         val adapter = NoteAdapter(noteList, db)
         recyclerView.adapter = adapter
 
-        val button_add_memo:Button = root.findViewById(R.id.button_add_memo)
-        button_add_memo.setOnClickListener {
-            // 메모 추가 버튼 (실험중)
-            val intent = Intent(root.context, Memo_Input_Activity::class.java)
-            startActivityForResult(intent, 1)
-        }
+//        val button_add_memo:Button = root.findViewById(R.id.button_add_memo)
+//        button_add_memo.setOnClickListener {
+//            // 메모 추가 버튼 (실험중)
+//            val intent = Intent(root.context, Memo_Input_Activity::class.java)
+//            startActivityForResult(intent, 1)
+//        }
 
         val button_search_memo:Button = root.findViewById(R.id.button_search_memo)
         button_search_memo.setOnClickListener {
@@ -152,6 +155,25 @@ class TimelineFragment : Fragment() {
             startActivityForResult(intent, 4)
         }
 
+        // 리사이클러뷰 위로 당겨서 새로고침 하는 기능
+        // 단, 검색중에 수행하면 오늘 날짜로 돌아옴
+        var refresh_layout = root.findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
+        refresh_layout.setOnRefreshListener {
+            noteList.clear()
+            Thread(Runnable {
+                Log.d("load", "db loading")
+                noteCount = db.noteDao().countNoteSelectedTime(selected_Time_DB)
+                val tempNoteList = db.noteDao().getNoteListSelectedTime(selected_Time_DB)
+                for (i in 0 until noteCount) {
+                    noteList.add(tempNoteList[i])
+                    Log.d("Tag", tempNoteList[i].content!!)
+                }
+            }).start()
+            selected_Time.text = selected_Time_String
+            val adapter = NoteAdapter(noteList, db)
+            recyclerView.adapter = adapter
+            refresh_layout.isRefreshing = false
+        }
 
 
         return root
@@ -167,7 +189,7 @@ class TimelineFragment : Fragment() {
                     val text_memo = data.getStringExtra("memo")
                     if(text_memo != ""){
                         // 입력이 빈칸이 아닐 때만 동작
-                        val tempNote = Note(null, false, text_memo.toString(), 20210515, System.currentTimeMillis(), "")
+                        val tempNote = Note(null, false, text_memo.toString(), selected_Time_DB, System.currentTimeMillis(), "")
                         noteList.add(tempNote)
                         val adapter = NoteAdapter(noteList, db)
                         recyclerView.adapter = adapter
@@ -185,7 +207,8 @@ class TimelineFragment : Fragment() {
                     selected_year = data.getStringExtra("year").toString()
                     selected_Month = data.getStringExtra("month").toString()
                     selected_dayOfMonth = data.getStringExtra("dayOfMonth").toString()
-                    selected_Time.text = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
+                    selected_Time_String = getString(R.string.year_month_day, selected_year, selected_Month, selected_dayOfMonth)
+                    selected_Time.text = selected_Time_String
                     selected_Time_DB = selected_year.toInt()*10000+selected_Month.toInt()*100+selected_dayOfMonth.toInt()
                     noteList.clear()
 
@@ -202,8 +225,8 @@ class TimelineFragment : Fragment() {
                     val adapter = NoteAdapter(noteList, db)
                     recyclerView.adapter = adapter
 
-                    noteEditText.isClickable = true
-                    noteEditText.isEnabled = true
+//                    noteEditText.isClickable = true
+//                    noteEditText.isEnabled = true
                 }
             }
             if(requestCode==3){
@@ -212,8 +235,8 @@ class TimelineFragment : Fragment() {
                 if(data != null) {
                     searchText = data.getStringExtra("searchText").toString()
                     selected_Time.text = "${searchText} 검색결과"
-                    noteEditText.isClickable = false
-                    noteEditText.isEnabled = false
+//                    noteEditText.isClickable = false
+//                    noteEditText.isEnabled = false
 
                     Thread(Runnable {
                         val tempNoteList = db.noteDao().findByResult("%$searchText%")

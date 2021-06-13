@@ -35,7 +35,7 @@ class NotificationReceiver : BroadcastReceiver() {
             var db = Room.databaseBuilder(
                 context,
                 AppDatabase::class.java,
-                "noteDBa4d5aa"
+                "noteDBa4d5aaa"
             ).build()
 
             Thread(Runnable {

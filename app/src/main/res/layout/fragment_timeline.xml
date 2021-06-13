@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:background="@color/mint"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/line1"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -37,21 +37,29 @@
             android:text="@string/default_value"
             android:fontFamily="@font/malgunbd"
             android:textSize="20sp"
+            android:gravity="center_horizontal"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <Button
+            android:id="@+id/button_search_memo"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/baseline_search_black_48"
+            android:layout_marginHorizontal="2dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@id/CalendarButton"/>
 
         <Button
             android:id="@+id/CalendarButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/timeline_calendar"
-            android:textSize="15sp"
-            android:backgroundTint="@color/teal_700"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/baseline_date_range_black_48"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/selected_Time"
             app:layout_constraintRight_toRightOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -61,116 +69,89 @@
         android:layout_height="5dp"
         android:background="@color/gray55"
         app:layout_constraintTop_toBottomOf="@id/menuBarLayout"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"/>
+        app:layout_constraintBottom_toTopOf="@+id/refresh_layout"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/grayEE"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/line1"
-        app:layout_constraintBottom_toTopOf="@id/line2"/>
+        app:layout_constraintBottom_toTopOf="@id/line2">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/grayEE"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <View
         android:id="@+id/line2"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:background="@color/gray55"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@id/refresh_layout"
         app:layout_constraintBottom_toTopOf="@+id/bottomLayout"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="1dp"
+        android:background="@color/gray33"
         app:layout_constraintTop_toBottomOf="@id/line2"
-        app:layout_constraintBottom_toTopOf="@id/line3"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <Button
-            android:id="@+id/button_add_memo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/timeline_add_memo"
-            android:layout_margin="2dp"
-            android:backgroundTint="@color/teal_700"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/button_search_memo"/>
-
-        <Button
-            android:id="@+id/button_search_memo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/timeline_search_memo"
-            android:layout_margin="2dp"
-            android:backgroundTint="@color/teal_700"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/button_add_memo"
-            app:layout_constraintRight_toLeftOf="@id/button_add_image"/>
-
-        <Button
-            android:id="@+id/button_add_image"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="사진 추가"
-            android:layout_margin="2dp"
-            android:backgroundTint="@color/teal_700"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/button_search_memo"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        android:id="@+id/line3"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/gray55"
-        app:layout_constraintTop_toBottomOf="@id/bottomLayout"
-        app:layout_constraintBottom_toTopOf="@+id/InputLayout"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/InputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="1dp"
-        app:layout_constraintTop_toBottomOf="@id/line3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-        <EditText
-            android:id="@+id/noteEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/content_hint"
-            android:autofillHints="@string/content_hint"
-            android:inputType="text"
-            app:layout_constraintTop_toTopOf="parent"
+        <Button
+            android:id="@+id/button_add_image"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/baseline_image_black_48"
+            android:layout_marginBottom="10dp"
+            android:layout_marginHorizontal="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/addButton"/>
+            app:layout_constraintRight_toLeftOf="@id/noteEditText_L"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/noteEditText_L"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/button_add_image"
+            app:layout_constraintRight_toLeftOf="@id/addButton">
+
+            <EditText
+                android:id="@+id/noteEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/content_hint"
+                android:autofillHints="@string/content_hint"
+                android:inputType="textMultiLine"
+                android:maxLines="4" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/addButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/addNote"
-            android:textSize="15sp"
-            android:backgroundTint="@color/teal_700"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/baseline_send_black_48"
+            android:layout_marginBottom="10dp"
+            android:layout_marginHorizontal="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/noteEditText"
+            app:layout_constraintLeft_toRightOf="@id/noteEditText_L"
             app:layout_constraintRight_toRightOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
