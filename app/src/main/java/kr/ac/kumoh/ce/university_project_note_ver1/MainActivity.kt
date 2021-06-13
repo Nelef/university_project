@@ -24,13 +24,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var appBarConfiguration: AppBarConfiguration
-    var mBackWait:Long = 0
-
     private val channelID = "com.anushka.notificationdemo.channel1"
-    private var notificationManager: NotificationManager? = null
-    private val KEY_REPLY = "key_reply"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,7 +117,6 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_HELP = 101
         const val NOTIFICATION_ID = 200
 
-        lateinit var instance:MainActivity
+        lateinit var instance:MainActivity      // 간편답장에서 쓰기 위한 메인액티비티 객체
     }
-
 }

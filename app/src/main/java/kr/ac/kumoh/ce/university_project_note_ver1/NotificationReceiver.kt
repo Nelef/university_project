@@ -69,20 +69,12 @@ class NotificationReceiver : BroadcastReceiver() {
                 .addAction(action)
                 .setOngoing(true) // 사용자가 직접 못지우게 계속 실행하기.
 
-
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.notify(MainActivity.NOTIFICATION_ID, mBuilder.build())
-
-//            MainActivity.instance.displayNotification()
         }
-
         //if help button is clicked
         if (intent.getIntExtra(MainActivity.KEY_INTENT_HELP, -1) == MainActivity.REQUEST_CODE_HELP) {
             Toast.makeText(context, "You Clicked Help", Toast.LENGTH_LONG).show();
         }
-    }
-    fun test()
-    {
-        Toast.makeText(mContext, "test___", Toast.LENGTH_LONG).show();
     }
 }

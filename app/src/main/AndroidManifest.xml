@@ -18,10 +18,7 @@
             android:name=".ui.timeline.MemoSearchActivity"
             android:theme="@style/Theme.AppCompat.Dialog.MinWidth" />
         <activity
-            android:name=".ui.timeline.TimelineCalendarActivity2"
-            android:theme="@style/Theme.AppCompat.Dialog.MinWidth" />
-        <activity
-            android:name=".ui.timeline.Memo_Input_Activity"
+            android:name=".ui.timeline.TimelineCalendarActivity"
             android:theme="@style/Theme.AppCompat.Dialog.MinWidth" />
         <activity
             android:name=".MainActivity"
@@ -37,7 +34,7 @@
         <receiver
             android:name=".NotificationReceiver"
             android:enabled="true"
-            android:exported="false"></receiver>
+            android:exported="false"/>
     </application>
 
 </manifest>

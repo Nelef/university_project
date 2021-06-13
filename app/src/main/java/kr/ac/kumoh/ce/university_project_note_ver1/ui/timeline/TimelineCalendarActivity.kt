@@ -7,21 +7,17 @@ import android.view.Window
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.DatePicker
-import android.widget.Toast
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AlertDialog
 import kr.ac.kumoh.ce.university_project_note_ver1.R
-import java.text.SimpleDateFormat
 import java.util.*
 
-class TimelineCalendarActivity2 : AppCompatActivity() {
+class TimelineCalendarActivity : AppCompatActivity() {
 
     lateinit var calendarView: CalendarView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)  // TitleBar 제거
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_timeline_calendar2)
+        setContentView(R.layout.activity_timeline_calendar)
 
         // ---------------- 스피너로 날짜 선택 ----------------
         val vDatePicker = findViewById<DatePicker>(R.id.vDatePicker)

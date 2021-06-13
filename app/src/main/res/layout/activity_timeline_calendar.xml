@@ -20,7 +20,5 @@
         android:id="@+id/vDateEnter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="mOnClick"
         android:text="확인" />
-
 </LinearLayout>
