@@ -19,12 +19,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class NotificationReceiver : BroadcastReceiver() {
-    lateinit var mContext: Context
     override fun onReceive(context: Context, intent: Intent) {
         //getting the remote input bundle from intent
         val remoteInput = androidx.core.app.RemoteInput.getResultsFromIntent(intent)
 
-        mContext = context
         //if there is some input
         if (remoteInput != null) {
 
@@ -70,11 +68,9 @@ class NotificationReceiver : BroadcastReceiver() {
                 .setOngoing(true) // 사용자가 직접 못지우게 계속 실행하기.
 
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            Toast.makeText(context, "메모입력완료.. $name", Toast.LENGTH_LONG).show();
             notificationManager.notify(MainActivity.NOTIFICATION_ID, mBuilder.build())
-        }
-        //if help button is clicked
-        if (intent.getIntExtra(MainActivity.KEY_INTENT_HELP, -1) == MainActivity.REQUEST_CODE_HELP) {
-            Toast.makeText(context, "You Clicked Help", Toast.LENGTH_LONG).show();
         }
     }
 }
