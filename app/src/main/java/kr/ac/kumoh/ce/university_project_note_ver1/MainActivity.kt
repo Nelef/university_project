@@ -6,11 +6,13 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NotificationCompat
@@ -22,10 +24,18 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import android.Manifest
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private val channelID = "com.anushka.notificationdemo.channel1"
+
+    var permission_list = arrayOf<String>(
+//        Manifest.permission.INTERNET,
+//        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+//        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,18 +56,15 @@ class MainActivity : AppCompatActivity() {
         //reply test
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val importance = NotificationManager.IMPORTANCE_HIGH
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
             val mChannel = NotificationChannel(CHANNNEL_ID, CHANNEL_NAME, importance)
             mChannel.description = CHANNEL_DESC
-            mChannel.enableLights(true)
-            mChannel.lightColor = Color.RED
-            mChannel.enableVibration(true)
-            mChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
             mNotificationManager.createNotificationChannel(mChannel)
         }
-        displayNotification()
 
-        instance = this
+        checkPermission()
+
+        displayNotification()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -69,6 +76,40 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    //권한 설정
+    fun checkPermission() {
+        //현재 안드로이드 버전이 6.0미만이면 메서드를 종료한다.
+        //안드로이드6.0 (마시멜로) 이후 버전부터 유저 권한설정 필요
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
+        for (permission in permission_list) {
+            //권한 허용 여부를 확인한다.
+            val chk = checkCallingOrSelfPermission(permission)
+            if (chk == PackageManager.PERMISSION_DENIED) {
+                //권한 허용을여부를 확인하는 창을 띄운다
+                requestPermissions(permission_list, 0)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 0) {
+            for (i in grantResults.indices) {
+                //허용됬다면
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    //권한을 하나라도 허용하지 않는다면 앱 종료
+                    Toast.makeText(applicationContext, "앱권한설정하세요", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+            }
+        }
     }
 
     //reply test
@@ -116,7 +157,5 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_MORE = 100
         const val REQUEST_CODE_HELP = 101
         const val NOTIFICATION_ID = 200
-
-        lateinit var instance:MainActivity      // 간편답장에서 쓰기 위한 메인액티비티 객체
     }
 }
