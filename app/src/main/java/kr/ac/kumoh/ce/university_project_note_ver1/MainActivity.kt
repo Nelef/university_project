@@ -1,19 +1,18 @@
 package kr.ac.kumoh.ce.university_project_note_ver1
 
-import android.app.Application
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
@@ -24,11 +23,12 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
-import android.Manifest
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private val channelID = "com.anushka.notificationdemo.channel1"
+
+
 
     var permission_list = arrayOf<String>(
 //        Manifest.permission.INTERNET,
@@ -43,13 +43,25 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+//        setTheme(R.style.Theme_University_project_note_ver1_Night)
+//
+//        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        } else {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//        }
+//
+
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_timeline, R.id.nav_map, R.id.nav_googledrive, R.id.nav_option), drawerLayout)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.nav_timeline, R.id.nav_map, R.id.nav_googledrive, R.id.nav_option
+            ), drawerLayout
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -118,7 +130,10 @@ class MainActivity : AppCompatActivity() {
         val helpPendingIntent = PendingIntent.getBroadcast(
             this@MainActivity,
             REQUEST_CODE_HELP,
-            Intent(this@MainActivity, NotificationReceiver::class.java).putExtra(KEY_INTENT_HELP, REQUEST_CODE_HELP),
+            Intent(this@MainActivity, NotificationReceiver::class.java).putExtra(
+                KEY_INTENT_HELP,
+                REQUEST_CODE_HELP
+            ),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
@@ -128,8 +143,10 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         //For the remote input we need this action object
-        val action = NotificationCompat.Action.Builder(android.R.drawable.ic_delete,
-            "메모를 입력하세요..", helpPendingIntent)
+        val action = NotificationCompat.Action.Builder(
+            android.R.drawable.ic_delete,
+            "메모를 입력하세요..", helpPendingIntent
+        )
             .addRemoteInput(remoteInput)
             .build()
 
@@ -157,5 +174,23 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_MORE = 100
         const val REQUEST_CODE_HELP = 101
         const val NOTIFICATION_ID = 200
+    }
+}
+
+object ThemeUtil {
+    const val LIGHT_MODE = "light"
+    const val DARK_MODE = "dark"
+    const val DEFAULT_MODE = "default"
+    fun applyTheme(themeColor: String?) {
+        when (themeColor) {
+            LIGHT_MODE -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            DARK_MODE -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else ->                 // 안드로이드 10 이상
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
+                }
+        }
     }
 }
