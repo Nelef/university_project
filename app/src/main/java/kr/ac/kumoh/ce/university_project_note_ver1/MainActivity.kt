@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
@@ -157,5 +158,23 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_MORE = 100
         const val REQUEST_CODE_HELP = 101
         const val NOTIFICATION_ID = 200
+    }
+}
+
+object ThemeUtil {
+    const val LIGHT_MODE = "light"
+    const val DARK_MODE = "dark"
+    const val DEFAULT_MODE = "default"
+    fun applyTheme(themeColor: String?) {
+        when (themeColor) {
+            LIGHT_MODE -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            DARK_MODE -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else ->                 // 안드로이드 10 이상
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
+                }
+        }
     }
 }

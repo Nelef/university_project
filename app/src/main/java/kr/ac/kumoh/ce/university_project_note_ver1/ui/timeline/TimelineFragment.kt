@@ -1,9 +1,13 @@
 package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
 
 import android.app.Activity.RESULT_OK
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
+import android.media.ExifInterface
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -14,6 +18,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +26,8 @@ import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
+import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 
 import java.util.*
@@ -139,6 +146,7 @@ class TimelineFragment : Fragment() {
             startActivityForResult(intent, 3)
         }
 
+        //사진
         addImage.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
@@ -227,9 +235,25 @@ class TimelineFragment : Fragment() {
                 // 이미지 추가 인텐트 종료 후 수행됨.
                 if(data != null){
                     val temp_uri = data.data
-                    val ImageUri = Uri.parse(temp_uri.toString())
+                    var ImageUri = Uri.parse(temp_uri.toString())
+                    val absolutePath = getRealPathFromUri(ImageUri)
+                    var exif: ExifInterface? = null
 
-                    val tempNote = Note(null, false, "", selected_Time_DB, System.currentTimeMillis(), ImageUri.toString())
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            Log.d("ExifPath", absolutePath.toString())
+                            exif = ExifInterface(File(absolutePath))
+                        }
+                    }catch (e: IOException){
+                        e.printStackTrace()
+                    }
+                    Log.d("Exif_SDK", Build.VERSION.SDK_INT.toString())
+                    Log.d("ExifFile", File(ImageUri.path).absolutePath)
+                    Log.d("test", exif?.getAttribute(ExifInterface.TAG_DATETIME).toString()) // 메타 데이터 없을시 오류 발생.
+
+                    var date: Date = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).parse(exif?.getAttribute(ExifInterface.TAG_DATETIME))
+
+                    val tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date.time, ImageUri.toString())
                     noteList.add(tempNote)
                     val adapter = NoteAdapter(noteList, db)
                     recyclerView.adapter = adapter
@@ -241,5 +265,20 @@ class TimelineFragment : Fragment() {
                 }
             }
         }
+    }
+    fun getRealPathFromUri(contentURI: Uri) : String?{
+        val result: String?
+
+        val cursor: Cursor = requireContext().contentResolver.query(contentURI, null, null, null, null)!!
+
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.path
+        } else {
+            cursor.moveToFirst()
+            val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+        return result
     }
 }

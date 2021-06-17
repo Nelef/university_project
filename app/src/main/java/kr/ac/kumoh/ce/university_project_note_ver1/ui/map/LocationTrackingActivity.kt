@@ -19,24 +19,22 @@ import kr.ac.kumoh.ce.university_project_note_ver1.R
 
 
 class LocationTrackingActivity : AppCompatActivity(), OnMapReadyCallback {
-    private lateinit var locationSource: FusedLocationSource
-    private lateinit var naverMap: NaverMap
+    val lat = 35.799503 //LATITUDE.toDouble()
+    val lng = 128.587006 //LONGITUDE.toDouble()
+
+    private val COORD = LatLng(lat, lng)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_location_tracking)
+        setContentView(R.layout.activity_map_fragment)
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
         }
 
-//        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as MapFragment?
-//            ?: MapFragment.newInstance(NaverMapOptions().locationButtonEnabled(true)).also {
-//                supportFragmentManager.beginTransaction().add(R.id.map_fragment, it).commit()
-//            }
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as MapFragment?
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment2) as MapFragment?
             ?: MapFragment.newInstance(
                 NaverMapOptions().camera(
                     CameraPosition(
@@ -47,33 +45,26 @@ class LocationTrackingActivity : AppCompatActivity(), OnMapReadyCallback {
                     )
                 )
             ).also {
-                supportFragmentManager.beginTransaction().add(R.id.map_fragment, it).commit()
+                supportFragmentManager.beginTransaction().add(R.id.map_fragment2, it).commit()
             }
         mapFragment.getMapAsync(this)
-
-        locationSource =
-            FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
-        if (locationSource.onRequestPermissionsResult(requestCode, permissions,
-                grantResults)) {
-            if (!locationSource.isActivated) { // Permission denied
-                naverMap.locationTrackingMode = LocationTrackingMode.None
-            }
-            return
+    override fun onOptionsItemSelected(item: MenuItem) =
+        if (item.itemId == android.R.id.home) {
+            finish()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
 
     override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-        naverMap.locationSource = locationSource
-    }
-
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        naverMap.moveCamera(CameraUpdate.scrollTo(COORD))
+        Marker().apply {
+            position = COORD
+            icon = MarkerIcons.BLACK
+            iconTintColor = Color.RED
+            map = naverMap
+        }
     }
 }
