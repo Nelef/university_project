@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -14,6 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.University_project_note_ver1">
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="stxk7160vi" />
         <activity
             android:name=".ui.timeline.MemoSearchActivity"
             android:theme="@style/Theme.AppCompat.Dialog.MinWidth" />
@@ -31,6 +36,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.map.LocationTrackingActivity"
+            android:theme="@style/Theme.AppCompat.Dialog.MinWidth"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
         <receiver
             android:name=".NotificationReceiver"
             android:enabled="true"
