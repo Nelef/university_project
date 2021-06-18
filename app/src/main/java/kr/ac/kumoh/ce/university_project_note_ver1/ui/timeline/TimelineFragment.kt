@@ -240,10 +240,8 @@ class TimelineFragment : Fragment() {
                     var exif: ExifInterface? = null
 
                     try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            Log.d("ExifPath", absolutePath.toString())
-                            exif = ExifInterface(File(absolutePath))
-                        }
+                        Log.d("ExifPath", absolutePath.toString())
+                        exif = ExifInterface(File(absolutePath).toString())
                     }catch (e: IOException){
                         e.printStackTrace()
                     }
