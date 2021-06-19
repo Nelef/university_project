@@ -43,8 +43,7 @@
         </activity>
         <activity
             android:name=".ui.map.LocationTrackingActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:theme="@style/Theme.AppCompat.Dialog.MinWidth" />
+            android:theme="@style/Theme.DialogStyle" />
 
         <receiver
             android:name=".NotificationReceiver"

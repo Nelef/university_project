@@ -33,11 +33,11 @@ class NotificationReceiver : BroadcastReceiver() {
             var db = Room.databaseBuilder(
                 context,
                 AppDatabase::class.java,
-                "noteDBa4d5aaa"
+                "noteDBa4d5aaaaaa"
             ).build()
 
             Thread(Runnable {
-                db.noteDao().insertNote(Note(null, false, name.toString(), SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date, ""))
+                db.noteDao().insertNote(Note(null, false, name.toString(), SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date, "",0.0,0.0))
                 Log.d("알림", name.toString())
             }).start()
 

@@ -1,13 +1,11 @@
 package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
 
 import android.app.Activity.RESULT_OK
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.media.ExifInterface
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -30,7 +28,6 @@ import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
-
 import java.util.*
 
 class TimelineFragment : Fragment() {
@@ -56,12 +53,16 @@ class TimelineFragment : Fragment() {
     var selected_Time_DB:Int = 0                                // 설정된 날짜를 Int형으로 저장
     var selected_Time_String:String = ""                        // 설정된 날짜를 String형으로 저장
 
+    lateinit var root2: Context
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_timeline, container, false)
+
+        root2 = root.context
 
         addButton= root.findViewById(R.id.addButton)
         noteEditText = root.findViewById(R.id.noteEditText)
@@ -82,7 +83,7 @@ class TimelineFragment : Fragment() {
         db = Room.databaseBuilder(
             root.context,
             AppDatabase::class.java,
-            "noteDBa4d5aaa"
+            "noteDBa4d5aaaaaa"
         ).build()
 
         // DB에서 내용 불러오기
@@ -105,7 +106,7 @@ class TimelineFragment : Fragment() {
             // 입력칸이 빈 경우
             if(text == "") return@setOnClickListener
 
-            val tempNote = Note(null, false, text, selected_Time_DB, System.currentTimeMillis(), "")
+            val tempNote = Note(null, false, text, selected_Time_DB, System.currentTimeMillis(), "", 0.0, 0.0)
             noteList.add(tempNote)
 
             val adapter = NoteAdapter(noteList, db)
@@ -251,13 +252,40 @@ class TimelineFragment : Fragment() {
                     var temp = exif?.getAttribute(ExifInterface.TAG_DATETIME)
                     Log.d("exif_r", temp.toString())
 
-                    if (temp == null){
-                        tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(System.currentTimeMillis()).toInt(), System.currentTimeMillis(), ImageUri.toString())
+                    // ------------------ 지도 코드 ---------------------
+
+                    var LATITUDE = exif?.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
+                    var LONGITUDE = exif?.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)
+
+                    var lat_result = 0.0
+                    var lng_result = 0.0
+
+                    if(LATITUDE != null && LONGITUDE != null) {
+                        var latArray = LATITUDE.split(",", "/")
+                        var lngArray = LONGITUDE.split(",", "/")
+                        lat_result = latArray[0].toDouble()/latArray[1].toDouble() + latArray[2].toDouble()/latArray[3].toDouble() / 60 + latArray[4].toDouble()/latArray[5].toDouble() / 3600
+                        lng_result = lngArray[0].toDouble()/lngArray[1].toDouble() + lngArray[2].toDouble()/lngArray[3].toDouble() / 60 + lngArray[4].toDouble()/lngArray[5].toDouble() / 3600
+                    }
+
+                    if (temp == null || LATITUDE == null || LONGITUDE == null){
+                        tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(System.currentTimeMillis()).toInt(), System.currentTimeMillis(), ImageUri.toString(), 0.0, 0.0)
                     } else {
                         var date: Date = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).parse(temp)
-                        tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date.time, ImageUri.toString())
+                        tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date.time, ImageUri.toString(), lat_result, lng_result)
                     }
-                    
+                    // ------------------ 지도 코드 ---------------------
+                    // 데이터베이스 버전 바꾸고(dbname) -> TimelineFragment.kt, NotificationReceiver.kt
+                    // model/Note에
+                    //    @ColumnInfo(name = "LATITUDE") val LATITUDE: Double?,
+                    //    @ColumnInfo(name = "LONGITUDE") val LONGITUDE: Double?
+                    // 추가.
+                    // MainActivity.kt
+                    //        <activity
+                    //            android:name=".ui.map.LocationTrackingActivity"
+                    //            android:theme="@style/Theme.DialogStyle" />
+                    // 로 변경
+
+
                     noteList.add(tempNote)
                     val adapter = NoteAdapter(noteList, db)
                     recyclerView.adapter = adapter
