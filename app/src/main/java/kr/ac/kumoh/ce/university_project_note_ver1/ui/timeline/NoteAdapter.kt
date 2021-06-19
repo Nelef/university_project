@@ -9,8 +9,11 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import kr.ac.kumoh.ce.university_project_note_ver1.R
+import kr.ac.kumoh.ce.university_project_note_ver1.ui.map.LocationTrackingActivity
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,7 +21,7 @@ import java.util.*
 class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDatabase) : RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
     private var mData: MutableList<Note>
     private var db: AppDatabase
-
+    lateinit var context2:Context
     // 생성자에서 데이터 리스트 객체를 전달받음.
     init {
         mData = list
@@ -43,6 +46,7 @@ class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDat
     // onCreateViewHolder() - 아이템 뷰를 위한 뷰홀더 객체 생성하여 리턴.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
+        context2 = context
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.list_row_item, parent, false)
         return ViewHolder(view)
@@ -65,6 +69,14 @@ class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDat
             }).start()
             notifyDataSetChanged()      // 데이터 변경 시 갱신하는 코드
         }
+        // ------------------ 지도 코드 ---------------------
+        holder.itemImageView.setOnClickListener {
+            var intent = Intent(context2, LocationTrackingActivity::class.java)
+            intent.putExtra("LATITUDE", cNote.LATITUDE)
+            intent.putExtra("LONGITUDE", cNote.LONGITUDE)
+            startActivity(context2, intent, null)
+        }
+        // ------------------ 지도 코드 ---------------------
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴.
