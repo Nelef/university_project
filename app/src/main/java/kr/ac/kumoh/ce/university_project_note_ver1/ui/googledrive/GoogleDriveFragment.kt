@@ -10,7 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.ebner.roomdatabasebackup.core.RoomBackup
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -21,8 +23,9 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.FileList
+import kr.ac.kumoh.ce.university_project_note_ver1.MainActivity
 import kr.ac.kumoh.ce.university_project_note_ver1.R
-import java.util.ArrayList
+import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.TimelineFragment
 
 class GoogleDriveFragment : Fragment() {
     private var mDriveServiceHelper: DriveServiceHelper? = null
@@ -30,6 +33,8 @@ class GoogleDriveFragment : Fragment() {
     private var mFileTitleEditText: EditText? = null
     private var mDocContentEditText: EditText? = null
     lateinit var root:View
+
+    val SECRET_PASSWORD = "verySecretEncryptionKey" // 암호화 키 설정
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +55,46 @@ class GoogleDriveFragment : Fragment() {
         // 사용자를 인증합니다. 대부분의 앱의 경우 사용자가
         // onCreate가 아닌 드라이브 액세스가 필요한 작업입니다.
         requestSignIn()
+
+        root.findViewById<View>(R.id.btn_backup).setOnClickListener {
+            RoomBackup()
+                .context(root.context)
+                .database(TimelineFragment.db)
+                .enableLogDebug(false)
+                .backupIsEncrypted(true)
+                .customEncryptPassword(SECRET_PASSWORD)
+                .useExternalStorage(true)
+                //maxFileCount: else 1000 because i cannot surround it with if condition
+                .maxFileCount(5)
+                .apply {
+                    onCompleteListener { success, message ->
+                        Log.d(TAG, "success: $success, message: $message")
+                        Toast.makeText(context, "success: $success, message: $message", Toast.LENGTH_LONG).show()
+                        if (success) restartApp(Intent(context, MainActivity::class.java))
+                    }
+                }
+                .backup()
+
+
+        }
+        root.findViewById<View>(R.id.btn_restore).setOnClickListener {
+            RoomBackup()
+                .context(root.context)
+                .database(TimelineFragment.db)
+                .enableLogDebug(false)
+                .backupIsEncrypted(true)
+                .customEncryptPassword(SECRET_PASSWORD)
+                .useExternalStorage(true)
+                .apply {
+                    onCompleteListener { success, message ->
+                        Log.d(TAG, "success: $success, message: $message")
+                        Toast.makeText(context, "success: $success, message: $message", Toast.LENGTH_LONG).show()
+                        if (success) restartApp(Intent(context, MainActivity::class.java))
+                    }
+
+                }
+                .restore()
+        }
 
         return root
     }
@@ -220,5 +265,6 @@ class GoogleDriveFragment : Fragment() {
         private const val REQUEST_CODE_SIGN_IN = 1
         private const val REQUEST_CODE_OPEN_DOCUMENT = 2
     }
+
 
 }
