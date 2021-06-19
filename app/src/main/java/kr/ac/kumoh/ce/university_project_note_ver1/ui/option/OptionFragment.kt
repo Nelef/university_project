@@ -49,7 +49,7 @@ class OptionFragment : Fragment() {
         }
 
         changePasswordButton.setOnClickListener {
-            val cP = passwordSharedPreferences?.getString("password", "123").toString()
+            val cP = passwordSharedPreferences?.getString("password", "").toString()
             if (currentPassword.text.toString() == cP && newPassword.text.toString() == confirmPassword.text.toString()){
                 passwordSharedPreferences?.edit {
                     putString("password", newPassword.text.toString())
