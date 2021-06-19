@@ -15,8 +15,6 @@ class MemoSearchActivity : AppCompatActivity() {
 //    lateinit var searchEditText:EditText
 //    lateinit var searchButton: Button
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)  // TitleBar 제거
         super.onCreate(savedInstanceState)

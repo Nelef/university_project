@@ -14,7 +14,7 @@
         tools:context=".ui.timeline.Drive_save_activity">
 
         <LinearLayout
-            android:id="@+id/btn_layout2"
+            android:id="@+id/btn_layout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal">
@@ -24,9 +24,9 @@
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="1dp"
                 android:layout_weight="1"
-                android:text="Backup"
+                android:text="로컬 백업"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textColor="@android:color/white" />
@@ -36,60 +36,39 @@
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="1dp"
                 android:layout_weight="1"
-                android:text="Restore"
+                android:text="로컬 복원"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btn_drive_backup"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="1dp"
+                android:layout_weight="1"
+                android:text="클라우드 백업"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btn_drive_restore"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:layout_weight="1"
+                android:text="클라우드 복원"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textColor="@android:color/white" />
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/file_title_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="61dp" />
 
-        <EditText
-            android:id="@+id/doc_content_edittext"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_below="@id/file_title_edittext"
-            android:layout_above="@id/btn_layout" />
-
-        <LinearLayout
-            android:id="@+id/btn_layout"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true">
-
-            <Button
-                android:id="@+id/create_btn"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="Create"
-                style="?attr/buttonBarButtonStyle" />
-
-            <Button
-                android:id="@+id/save_btn"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="Save"
-                style="?attr/buttonBarButtonStyle" />
-
-            <Button
-                android:id="@+id/query_btn"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="Query"
-                style="?attr/buttonBarButtonStyle" />
-
-        </LinearLayout>
 
     </RelativeLayout>
 
