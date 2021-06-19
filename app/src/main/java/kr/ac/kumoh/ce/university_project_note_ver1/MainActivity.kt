@@ -26,6 +26,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import android.Manifest
+import android.util.Log
+import kr.ac.kumoh.ce.university_project_note_ver1.ui.PasswordActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -68,10 +70,27 @@ class MainActivity : AppCompatActivity() {
         displayNotification()
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
+    }
+
+    override fun onStart() {
+        var password = getSharedPreferences("password", Context.MODE_PRIVATE).getString("password", "").toString()
+        super.onStart()
+        Log.d("lock_1", lock.toString())
+        if (lock && password != "") {
+            var intent: Intent = Intent(this, PasswordActivity::class.java)
+            intent.putExtra("password", password)
+            startActivityForResult(intent, 1001)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        lock = true
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -106,8 +125,22 @@ class MainActivity : AppCompatActivity() {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                 } else {
                     //권한을 하나라도 허용하지 않는다면 앱 종료
-                    Toast.makeText(applicationContext, "앱권한설정하세요", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "앱 권한 설정하세요", Toast.LENGTH_LONG).show()
                     finish()
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode== RESULT_OK) {
+            if (requestCode == 1001) {
+                if (data != null) {
+                    lock = data.getBooleanExtra("lock", true)
+                    Log.d("lock", lock.toString())
+                    if(lock)
+                        finish()
                 }
             }
         }
@@ -158,6 +191,7 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_MORE = 100
         const val REQUEST_CODE_HELP = 101
         const val NOTIFICATION_ID = 200
+        var lock:Boolean = true
     }
 }
 

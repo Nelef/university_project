@@ -1,9 +1,6 @@
 package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 
 @Dao

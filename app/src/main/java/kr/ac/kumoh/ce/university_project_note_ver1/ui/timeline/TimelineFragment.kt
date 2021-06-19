@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import kr.ac.kumoh.ce.university_project_note_ver1.MainActivity
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.io.File
@@ -235,9 +236,10 @@ class TimelineFragment : Fragment() {
                 // 이미지 추가 인텐트 종료 후 수행됨.
                 if(data != null){
                     val temp_uri = data.data
-                    var ImageUri = Uri.parse(temp_uri.toString())
+                    val ImageUri = Uri.parse(temp_uri.toString())
                     val absolutePath = getRealPathFromUri(ImageUri)
                     var exif: ExifInterface? = null
+                    lateinit var tempNote: Note
 
                     try {
                         Log.d("ExifPath", absolutePath.toString())
@@ -245,13 +247,17 @@ class TimelineFragment : Fragment() {
                     }catch (e: IOException){
                         e.printStackTrace()
                     }
-                    Log.d("Exif_SDK", Build.VERSION.SDK_INT.toString())
-                    Log.d("ExifFile", File(ImageUri.path).absolutePath)
-                    Log.d("test", exif?.getAttribute(ExifInterface.TAG_DATETIME).toString()) // 메타 데이터 없을시 오류 발생.
 
-                    var date: Date = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).parse(exif?.getAttribute(ExifInterface.TAG_DATETIME))
+                    var temp = exif?.getAttribute(ExifInterface.TAG_DATETIME)
+                    Log.d("exif_r", temp.toString())
 
-                    val tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date.time, ImageUri.toString())
+                    if (temp == null){
+                        tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(System.currentTimeMillis()).toInt(), System.currentTimeMillis(), ImageUri.toString())
+                    } else {
+                        var date: Date = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).parse(temp)
+                        tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date.time, ImageUri.toString())
+                    }
+                    
                     noteList.add(tempNote)
                     val adapter = NoteAdapter(noteList, db)
                     recyclerView.adapter = adapter
@@ -261,6 +267,7 @@ class TimelineFragment : Fragment() {
                     }).start()
                     noteCount++
                 }
+                MainActivity.lock = false
             }
         }
     }
