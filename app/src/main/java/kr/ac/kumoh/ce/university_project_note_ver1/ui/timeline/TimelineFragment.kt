@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import kr.ac.kumoh.ce.university_project_note_ver1.MainActivity
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.io.File
@@ -266,6 +267,7 @@ class TimelineFragment : Fragment() {
                     }).start()
                     noteCount++
                 }
+                MainActivity.lock = false
             }
         }
     }

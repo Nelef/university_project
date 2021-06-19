@@ -33,8 +33,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private val channelID = "com.anushka.notificationdemo.channel1"
 
-    var lock:Boolean = true
-
     var permission_list = arrayOf<String>(
 //        Manifest.permission.INTERNET,
 //        Manifest.permission.RECORD_AUDIO,
@@ -80,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
-        var password = getSharedPreferences("password", Context.MODE_PRIVATE).getString("password", "1234").toString()
+        var password = getSharedPreferences("password", Context.MODE_PRIVATE).getString("password", "").toString()
         super.onStart()
         Log.d("lock_1", lock.toString())
         if (lock && password != "") {
@@ -193,6 +191,7 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_MORE = 100
         const val REQUEST_CODE_HELP = 101
         const val NOTIFICATION_ID = 200
+        var lock:Boolean = true
     }
 }
 
