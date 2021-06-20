@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kr.ac.kumoh.ce.university_project_note_ver1.R
-import kr.ac.kumoh.ce.university_project_note_ver1.ui.map.LocationTrackingActivity
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.text.SimpleDateFormat
 import java.util.*
@@ -71,7 +70,7 @@ class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDat
         }
         // ------------------ 지도 코드 ---------------------
         holder.itemImageView.setOnClickListener {
-            var intent = Intent(fg.context, LocationTrackingActivity::class.java)
+            var intent = Intent(fg.context, ImageGPSActivity::class.java)
             intent.putExtra("LATITUDE", cNote.LATITUDE)
             intent.putExtra("LONGITUDE", cNote.LONGITUDE)
             fg.startActivity(intent)

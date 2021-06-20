@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.option.OptionFragment"
-    android:fontFamily="@font/font_123rd">
+    tools:context=".ui.option.OptionFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,6 +24,7 @@
                 android:id="@+id/optionPassword"
                 android:text="패스워드 설정"
                 android:textSize="30sp"
+                android:fontFamily="@font/font_123rd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="15dp"
@@ -137,20 +137,68 @@
                 app:layout_constraintTop_toBottomOf="@id/changePasswordLayout"/>
 
             <TextView
-                android:id="@+id/option2"
-                android:text="옵션 2"
+                android:id="@+id/backupAndRestore"
+                android:text="구글 드라이브 백업"
                 android:textSize="30sp"
+                android:fontFamily="@font/font_123rd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="15dp"/>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/backupAndRestoreLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <Button
+                    android:id="@+id/btn_backup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    android:text="로컬 백업"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+                <Button
+                    android:id="@+id/btn_restore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    android:text="로컬 복원"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_backup"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+                <Button
+                    android:id="@+id/btn_drive_backup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    android:text="클라우드 백업"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_restore"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+                <Button
+                    android:id="@+id/btn_drive_restore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    android:text="클라우드 복원"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_drive_backup"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <View
                 android:id="@+id/line2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/gray77"
-                app:layout_constraintTop_toBottomOf="@id/option2"/>
+                app:layout_constraintTop_toBottomOf="@id/backupAndRestoreLayout"/>
 
         </LinearLayout>
 
