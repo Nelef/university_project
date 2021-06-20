@@ -16,7 +16,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +27,7 @@ import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
+
 import java.util.*
 
 class TimelineFragment : Fragment() {
@@ -106,19 +106,21 @@ class TimelineFragment : Fragment() {
             // 입력칸이 빈 경우
             if(text == "") return@setOnClickListener
 
-            val tempNote = Note(null, false, text, selected_Time_DB, System.currentTimeMillis(), "", 0.0, 0.0)
-            noteList.add(tempNote)
-
-            val adapter = NoteAdapter(noteList, db)
-            recyclerView.adapter = adapter
-
-            noteList.sortByDescending { it.ymd }
+            var tempNote = Note(null, false, text, selected_Time_DB, System.currentTimeMillis(), "",0.0, 0.0)
 
             // DB에 메모 추가
             Thread(Runnable {
-                db.noteDao().insertNote(tempNote)
+                var tid = db.noteDao().insertNote(tempNote).toInt()
+                tempNote = Note(tid, false, text, selected_Time_DB, System.currentTimeMillis(), "", 0.0, 0.0)
+                noteList.add(tempNote)
+                noteCount++
             }).start()
-            noteCount++
+
+            val adapter = NoteAdapter(noteList, db, this)
+            recyclerView.adapter = adapter
+
+            noteList.sortBy { it.time }
+
 
             // EditText 초기화
             noteEditText.setText("")
@@ -138,7 +140,7 @@ class TimelineFragment : Fragment() {
         recyclerView = root.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
-        val adapter = NoteAdapter(noteList, db)
+        val adapter = NoteAdapter(noteList, db, this)
         recyclerView.adapter = adapter
 
         val button_search_memo:Button = root.findViewById(R.id.button_search_memo)
@@ -159,23 +161,9 @@ class TimelineFragment : Fragment() {
         // 단, 검색중에 수행하면 오늘 날짜로 돌아옴
         val refresh_layout = root.findViewById<SwipeRefreshLayout>(R.id.refresh_layout)
         refresh_layout.setOnRefreshListener {
-            noteList.clear()
-            Thread(Runnable {
-                Log.d("load", "db loading")
-                noteCount = db.noteDao().countNoteSelectedTime(selected_Time_DB)
-                val tempNoteList = db.noteDao().getNoteListSelectedTime(selected_Time_DB)
-                for (i in 0 until noteCount) {
-                    noteList.add(tempNoteList[i])
-                    Log.d("Tag", tempNoteList[i].content!!)
-                }
-            }).start()
-            selected_Time.text = selected_Time_String
-            val adapter = NoteAdapter(noteList, db)
-            recyclerView.adapter = adapter
+            refreshOpreation()
             refresh_layout.isRefreshing = false
         }
-
-
         return root
     }
 
@@ -195,18 +183,15 @@ class TimelineFragment : Fragment() {
                     noteList.clear()
 
                     Thread(Runnable {
-                        Log.d("load", "db loading")
                         noteCount = db.noteDao().countNoteSelectedTime(selected_Time_DB)
                         val tempNoteList = db.noteDao().getNoteListSelectedTime(selected_Time_DB)
                         for (i in 0 until noteCount) {
                             noteList.add(tempNoteList[i])
-                            Log.d("Tag", tempNoteList[i].content!!)
                         }
                     }).start()
 
-                    val adapter = NoteAdapter(noteList, db)
+                    val adapter = NoteAdapter(noteList, db, this)
                     recyclerView.adapter = adapter
-
 //                    noteEditText.isClickable = true
 //                    noteEditText.isEnabled = true
                 }
@@ -229,7 +214,7 @@ class TimelineFragment : Fragment() {
                         }
                     }).start()
 
-                    val adapter = NoteAdapter(noteList, db)
+                    val adapter = NoteAdapter(noteList, db, this)
                     recyclerView.adapter = adapter
                 }
             }
@@ -285,20 +270,58 @@ class TimelineFragment : Fragment() {
                     //            android:theme="@style/Theme.DialogStyle" />
                     // 로 변경
 
-
-                    noteList.add(tempNote)
-                    val adapter = NoteAdapter(noteList, db)
-                    recyclerView.adapter = adapter
-
                     Thread(Runnable {
-                        db.noteDao().insertNote(tempNote)
+                        var tid = db.noteDao().insertNote(tempNote).toInt()
+                        tempNote = Note(tid, tempNote.image_b, tempNote.content, tempNote.ymd, tempNote.time, tempNote.image, tempNote.LATITUDE, tempNote.LONGITUDE)
+                        noteList.add(tempNote)
+                        noteCount++
                     }).start()
-                    noteCount++
+
+                    val adapter = NoteAdapter(noteList, db, this)
+                    recyclerView.adapter = adapter
+                }
+                MainActivity.lock = false
+            }
+            if (requestCode == 2000) {
+                if (data != null) {
+                    Thread(Runnable {
+                        var uid = data.getIntExtra("uid", 0)
+                        var cNote:Note = db.noteDao().getNoteUsingUid(uid)
+                        Log.d("uid2", cNote.uid.toString())
+                        var tempNote = Note(cNote.uid,
+                            cNote.image_b,
+                            data.getStringExtra("content"),
+                            data.getIntExtra("yyyyMMdd", 20200620),
+                            data.getLongExtra("time", cNote.time),
+                            cNote.image,
+                            cNote.LATITUDE, cNote.LONGITUDE
+                        )
+                        Log.d("uid3", data.getLongExtra("time", cNote.time).toString())
+                        db.noteDao().update(tempNote)
+                    }).start()
+                    val adapter = NoteAdapter(noteList, db, this)
+                    recyclerView.adapter = adapter
                 }
                 MainActivity.lock = false
             }
         }
     }
+
+    fun refreshOpreation(){
+        noteList.clear()
+        Thread(Runnable {
+            noteCount = db.noteDao().countNoteSelectedTime(selected_Time_DB)
+            val tempNoteList = db.noteDao().getNoteListSelectedTime(selected_Time_DB)
+            for (i in 0 until noteCount) {
+                noteList.add(tempNoteList[i])
+            }
+            noteList.sortBy { it.time }
+        }).start()
+        selected_Time.text = selected_Time_String
+        val adapter = NoteAdapter(noteList, db, this)
+        recyclerView.adapter = adapter
+    }
+
     fun getRealPathFromUri(contentURI: Uri) : String?{
         val result: String?
 

@@ -19,7 +19,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.University_project_note_ver1">
-        <activity android:name=".ui.PasswordActivity"></activity>
+        <activity android:name=".ui.PasswordActivity" />
+        <activity android:name=".ui.timeline.UpdateActivity"
+            android:theme="@style/Theme.AppCompat.Dialog.MinWidth"/>
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -41,7 +43,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.map.LocationTrackingActivity"
             android:theme="@style/Theme.DialogStyle" />
@@ -49,7 +50,7 @@
         <receiver
             android:name=".NotificationReceiver"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>
