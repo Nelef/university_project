@@ -11,15 +11,21 @@ import com.naver.maps.map.util.MarkerIcons
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 
 class ImageGPSActivity : AppCompatActivity(), OnMapReadyCallback {
-    val lat = 35.799503 //LATITUDE.toDouble()
-    val lng = 128.587006 //LONGITUDE.toDouble()
-
-    private val COORD = LatLng(lat, lng)
-
+    // ------------------ 지도 코드 ---------------------
+    // 코드 전체 복붙하셈
+    private lateinit var COORD:LatLng
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_map_fragment)
+        setContentView(R.layout.activity_map)
+
+        var intent = getIntent()
+
+        var LATITUDE = intent.getDoubleExtra("LATITUDE", 0.0)
+        var LONGITUDE = intent.getDoubleExtra("LONGITUDE", 0.0)
+
+        COORD = LatLng(LATITUDE, LONGITUDE)
+//        Toast.makeText(this, COORD.toString(), Toast.LENGTH_LONG).show()
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
