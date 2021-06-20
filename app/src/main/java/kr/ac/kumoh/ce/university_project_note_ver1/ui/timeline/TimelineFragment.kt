@@ -288,7 +288,7 @@ class TimelineFragment : Fragment() {
                                     db.noteDao().insertNote(tempNote)
                                 }).start()
                                 noteCount++
-                            } else if (count < 3 && count > 1) {
+                            } else if (count < 4 && count > 1) {
                                 for (i in 0..count-1) {
                                     val temp_uri: String? = clipData!!.getItemAt(i).uri.toString()
                                     var ImageUri = Uri.parse(temp_uri.toString())
