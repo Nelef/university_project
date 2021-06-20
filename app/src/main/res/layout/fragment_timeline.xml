@@ -18,18 +18,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-<!--        <TextView-->
-<!--            android:id="@+id/temp_text"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/selected_day"-->
-<!--            android:textSize="20sp"-->
-<!--            android:fontFamily="@font/malgunbd"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintLeft_toLeftOf="parent"-->
-<!--            app:layout_constraintRight_toLeftOf="@id/selected_Time"/>-->
-
         <TextView
             android:id="@+id/selected_Time"
             android:layout_width="0dp"
