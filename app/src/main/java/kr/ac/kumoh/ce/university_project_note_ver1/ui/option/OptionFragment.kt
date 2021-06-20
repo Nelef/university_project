@@ -162,6 +162,11 @@ class OptionFragment : Fragment() {
                 Log.d("테스트4", it.canonicalPath)
                 tempRoot.add(it.absolutePath)
             }
+            if (tempRoot.toString() == "[]") {
+                backup_id.hint = ""
+                backup_help_id.text = "클라우드 백업이 실패하였습니다.\n로컬 백업을 먼저 실행해주세요!"
+                return@setOnClickListener
+            }
             val splitArray = tempRoot[1].split("files")
             Log.d("테스트5", splitArray[1])
 
@@ -180,16 +185,30 @@ class OptionFragment : Fragment() {
                     backup_id.setText(temp.getString("id").toString())
                     backup_help_id.text = "클라우드 백업이 완료되었습니다. \n 키를 복사하세요!"
                 }
-                .addOnFailureListener { e -> Log.d(OptionFragment.TAG, "onFailure: " + e.message) }
+                .addOnFailureListener {
+                        e -> Log.d(OptionFragment.TAG, "onFailure: " + e.message)
+                    backup_id.hint = ""
+                    backup_help_id.text = "클라우드 백업이 실패하였습니다."
+                }
         }
 
         button_drive_restore.setOnClickListener {
             if (mDriveServiceHelper == null) {
                 return@setOnClickListener
             }
-            mDriveServiceHelper!!.downloadFile(File(root.context.getExternalFilesDir(null), "backup/drive.aes"), file_id?.getString("file_id", "").toString())
-                .addOnSuccessListener { Log.d(OptionFragment.TAG, "onSuccess: " + file_id?.getString("file_id", "").toString()) }
-                .addOnFailureListener { e -> Log.d(OptionFragment.TAG, "onFailure: " + e.message)}
+
+//            mDriveServiceHelper!!.downloadFile(File(root.context.getExternalFilesDir(null), "backup/drive.aes"), file_id?.getString("file_id", "").toString())
+            mDriveServiceHelper!!.downloadFile(File(root.context.getExternalFilesDir(null), "backup/drive.aes"), backup_id.text.toString())
+                .addOnSuccessListener {
+                    //Log.d(OptionFragment.TAG, "onSuccess: " + file_id?.getString("file_id", "").toString())
+                    backup_id.setText("")
+                    backup_help_id.text = "클라우드 복원이 성공하였습니다.\n로컬 복원에서 drive.aes 를 선택하여 복원해주세요!"
+                }
+                .addOnFailureListener {
+                        e -> Log.d(OptionFragment.TAG, "onFailure: " + e.message)
+                    backup_id.hint = ""
+                    backup_help_id.text = "클라우드 복원이 실패하였습니다.\n올바른 키 값을 입력해주세요."
+                }
         }
         return root
     }

@@ -83,7 +83,7 @@ class TimelineFragment : Fragment() {
         db = Room.databaseBuilder(
             root.context,
             AppDatabase::class.java,
-            "noteDBa4d5aaaaaa"
+            "noteDB"
         ).build()
 
         // DB에서 내용 불러오기
