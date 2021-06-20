@@ -106,12 +106,12 @@ class TimelineFragment : Fragment() {
             // 입력칸이 빈 경우
             if(text == "") return@setOnClickListener
 
-            var tempNote = Note(null, false, text, selected_Time_DB, System.currentTimeMillis(), "",0.0, 0.0)
+            var tempNote = Note(null, false, text, SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(System.currentTimeMillis()).toInt(), System.currentTimeMillis(), "",0.0, 0.0)
 
             // DB에 메모 추가
             Thread(Runnable {
                 var tid = db.noteDao().insertNote(tempNote).toInt()
-                tempNote = Note(tid, false, text, selected_Time_DB, System.currentTimeMillis(), "", 0.0, 0.0)
+                tempNote = Note(tid, false, text, tempNote.ymd, tempNote.time, "", 0.0, 0.0)
                 noteList.add(tempNote)
                 noteCount++
             }).start()
