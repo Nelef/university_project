@@ -19,9 +19,8 @@ allprojects {
         google()
         jcenter()
         // 네이버 지도 SDK
-        maven {
-            url 'https://naver.jfrog.io/artifactory/maven/' // naver map
-        }
+        maven { url 'https://naver.jfrog.io/artifactory/maven/' } // naver map
+        maven { url 'https://jitpack.io' } // backup
     }
 }
 

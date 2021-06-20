@@ -91,4 +91,6 @@ dependencies {
     // 현재 위치 사용
     implementation 'com.google.android.gms:play-services-location:17.0.0'
 
+    // Room Database Backup
+    implementation 'com.github.rafi0101:Android-Room-Database-Backup:1.0.0-beta06'
 }
