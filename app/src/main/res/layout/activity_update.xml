@@ -4,22 +4,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <CalendarView
-        android:id="@+id/calendarView"
+    <EditText
+        android:id="@+id/uEditText"
+        android:paddingTop="20dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <DatePicker
-        android:id="@+id/vDatePicker"
+        android:id="@+id/uDatePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:calendarViewShown="false"
         android:datePickerMode="spinner" />
 
+    <TimePicker
+        android:id="@+id/uTimePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:timePickerMode="spinner" />
+
     <Button
-        android:id="@+id/vDateEnter"
+        android:id="@+id/updateButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="확인" />
-
+    
 </LinearLayout>
