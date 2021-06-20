@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         var password = getSharedPreferences("password", Context.MODE_PRIVATE).getString("password", "").toString()
         super.onStart()
-        Log.d("lock_1", lock.toString())
         if (lock && password != "") {
             var intent: Intent = Intent(this, PasswordActivity::class.java)
             intent.putExtra("password", password)
@@ -138,7 +137,6 @@ class MainActivity : AppCompatActivity() {
             if (requestCode == 1001) {
                 if (data != null) {
                     lock = data.getBooleanExtra("lock", true)
-                    Log.d("lock", lock.toString())
                     if(lock)
                         finish()
                 }
