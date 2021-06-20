@@ -67,16 +67,6 @@ dependencies {
     implementation "androidx.room:room-runtime:2.2.6"
     kapt "androidx.room:room-compiler:2.2.6"
 
-    //google drive
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
-    implementation('com.google.api-client:google-api-client-android:1.26.0') {
-        exclude group: 'org.apache.httpcomponents'
-    }
-    implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
-        exclude group: 'org.apache.httpcomponents'
-    }
-
     // minSdkVersion 20 이하 "AndroidX를 사용하지 않는" 경우
     implementation 'com.android.support:multidex:1.0.3'
 
@@ -93,4 +83,10 @@ dependencies {
 
     // Room Database Backup
     implementation 'com.github.rafi0101:Android-Room-Database-Backup:1.0.0-beta06'
+
+    // Google Drive Rest library
+    implementation 'com.github.ammarptn:GDrive-Rest-Android:1.4.3'
+
+    // For Google login
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 }

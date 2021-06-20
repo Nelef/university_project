@@ -31,7 +31,6 @@ import kr.ac.kumoh.ce.university_project_note_ver1.ui.PasswordActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private val channelID = "com.anushka.notificationdemo.channel1"
 
     var permission_list = arrayOf<String>(
 //        Manifest.permission.INTERNET,
