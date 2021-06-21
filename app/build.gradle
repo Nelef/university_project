@@ -89,4 +89,7 @@ dependencies {
 
     // For Google login
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
+    // 리사이클러뷰 렉 해결
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
 }
