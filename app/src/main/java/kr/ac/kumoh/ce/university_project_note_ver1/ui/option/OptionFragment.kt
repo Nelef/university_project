@@ -82,9 +82,9 @@ class OptionFragment : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_option, container, false)
 
@@ -275,92 +275,18 @@ class OptionFragment : Fragment() {
                     }
                 }
             }
-
+            // - - - - - - - - - - - - - - - - - - - - -
             val builder = AlertDialog.Builder(root.context)
             builder.setTitle("최신 사진을 불러오시겠습니까?")
-            builder.setMessage("Camera 폴더 안에 '${last_image_time}'이후 ${max_size}개의 사진이 있습니다.")
+            builder.setMessage("${max_size}개의 사진을 불러 올 수 있습니다.\n'${last_image_time}' 이후 기준")
             builder.setPositiveButton("확인") {
-                dialoginterface: DialogInterface?, i: Int ->
-                Log.d(OptionFragment.TAG, "테스트 확인버튼 누름.")
-
-                progressBar.max = max_size
-                progressBar.progress = 0
-                progressBar_text.text = "0 / " + (max_size).toString()
-                for (i in 0..max_size-1){
-                    progressBar.progress = i+1
-                    progressBar_text.text = (i+1).toString() + " / " + (max_size).toString()
-                    Log.d("test : tempRoot[$i]", "${tempRoot[i]}") // Camera 폴더 안 모든 사진 경로
-
-                    if(Root[i] != null){
-                        val absolutePath = Root[i]
-
-                        var exif: ExifInterface? = null
-                        lateinit var tempNote: Note
-
-                        val current_image_time_array = absolutePath?.split("camera") // Camera 폴더 안에 있는 이미지의 last_image_name 추출.
-                        if(current_image_time_array?.size!! > 1){
-                            last_image_time = last_image_name_SharedPreferences?.getString("last_image_name", "") // 전역변수 마지막이미지 이름(숫자만 있으니 마지막 이미지 시간과 동일)
-                            val current_image_time = current_image_time_array[1].replace(("[^0-9]").toRegex(), "").substring(0, 14)
-                            // 현재 이름을 숫자로 변환(ex. 20210603_132728 -> 20210603132728)
-                            // .substring(0, 14) 을 통해 뒤에 쓸대없는 값 제거.
-                            if (last_image_time != null) {
-                                if(last_image_time == "")
-                                    last_image_time = "0"
-                                if(last_image_time!!.toDouble() < current_image_time.toDouble()){
-                                    last_image_name_SharedPreferences?.edit {
-                                        putString("last_image_name", current_image_time) // 전역변수에 마지막이미지 이름을 집어넣음.
-                                    }
-                                }
-                            }
-                        }
-
-                        try {
-                            Log.d("ExifPath", absolutePath.toString())
-                            exif = ExifInterface(File(absolutePath).toString())
-                        }catch (e: IOException){
-                            e.printStackTrace()
-                        }
-
-                        var temp = exif?.getAttribute(ExifInterface.TAG_DATETIME)
-                        Log.d("exif_r", temp.toString())
-
-                        // ------------------ 지도 코드 ---------------------
-
-                        var LATITUDE = exif?.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
-                        var LONGITUDE = exif?.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)
-
-                        var lat_result = 0.0
-                        var lng_result = 0.0
-
-                        if(LATITUDE != null && LONGITUDE != null) {
-                            var latArray = LATITUDE.split(",", "/")
-                            var lngArray = LONGITUDE.split(",", "/")
-                            lat_result = latArray[0].toDouble()/latArray[1].toDouble() + latArray[2].toDouble()/latArray[3].toDouble() / 60 + latArray[4].toDouble()/latArray[5].toDouble() / 3600
-                            lng_result = lngArray[0].toDouble()/lngArray[1].toDouble() + lngArray[2].toDouble()/lngArray[3].toDouble() / 60 + lngArray[4].toDouble()/lngArray[5].toDouble() / 3600
-                        }
-
-                        if (temp == null || LATITUDE == null || LONGITUDE == null){
-                            tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(System.currentTimeMillis()).toInt(), System.currentTimeMillis(), absolutePath.toString(), 0.0, 0.0)
-                        } else {
-                            var date: Date = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).parse(temp)
-                            tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date.time, absolutePath.toString(), lat_result, lng_result)
-                        }
-
-                        Thread(Runnable {
-                            var tid = TimelineFragment.db.noteDao().insertNote(tempNote).toInt()
-                            tempNote = Note(tid, tempNote.image_b, tempNote.content, tempNote.ymd, tempNote.time, tempNote.image, tempNote.LATITUDE, tempNote.LONGITUDE)
-                            noteList.add(tempNote)
-                            noteCount++
-                        }).start()
-
-                        val adapter = NoteAdapter(noteList, TimelineFragment.db, TimelineFragment())
-                        TimelineFragment.recyclerView.adapter = adapter
-                    }
-                }
-                MainActivity.lock = false
+                    dialoginterface: DialogInterface?, i: Int ->
+                Thread(Runnable {
+                    auto(max_size, Root)
+                }).start()
             }
             builder.setNegativeButton("취소") {
-                dialoginterface:DialogInterface?, i:Int ->
+                    dialoginterface:DialogInterface?, i:Int ->
                 Log.d(OptionFragment.TAG, "테스트 취소버튼 누름.")
 
             }
@@ -413,5 +339,83 @@ class OptionFragment : Fragment() {
                 Log.d(OptionFragment.TAG, "handleSignInResult: $mDriveServiceHelper")
             }
             .addOnFailureListener { e -> Log.e(OptionFragment.TAG, "Unable to sign in.", e) }
+    }
+
+    private fun auto(max_size:Int, Root:ArrayList<String>){
+        progressBar.max = max_size
+        progressBar.progress = 0
+        progressBar_text.text = "0 / " + (max_size).toString()
+        for (i in 0..max_size-1){
+            progressBar.progress = i+1
+            progressBar_text.text = (i+1).toString() + " / " + (max_size).toString()
+
+            if(Root[i] != null){
+                val absolutePath = Root[i]
+
+                var exif: ExifInterface? = null
+                lateinit var tempNote: Note
+
+                val current_image_time_array = absolutePath?.split("camera") // Camera 폴더 안에 있는 이미지의 last_image_name 추출.
+                if(current_image_time_array?.size!! > 1){
+                    var last_image_time = last_image_name_SharedPreferences?.getString("last_image_name", "") // 전역변수 마지막이미지 이름(숫자만 있으니 마지막 이미지 시간과 동일)
+                    val current_image_time = current_image_time_array[1].replace(("[^0-9]").toRegex(), "").substring(0, 14)
+                    // 현재 이름을 숫자로 변환(ex. 20210603_132728 -> 20210603132728)
+                    // .substring(0, 14) 을 통해 뒤에 쓸대없는 값 제거.
+                    if (last_image_time != null) {
+                        if(last_image_time == "")
+                            last_image_time = "0"
+                        if(last_image_time!!.toDouble() < current_image_time.toDouble()){
+                            last_image_name_SharedPreferences?.edit {
+                                putString("last_image_name", current_image_time) // 전역변수에 마지막이미지 이름을 집어넣음.
+                            }
+                        }
+                    }
+                }
+
+                try {
+                    Log.d("ExifPath", absolutePath.toString())
+                    exif = ExifInterface(File(absolutePath).toString())
+                }catch (e: IOException){
+                    e.printStackTrace()
+                }
+
+                var temp = exif?.getAttribute(ExifInterface.TAG_DATETIME)
+                Log.d("exif_r", temp.toString())
+
+                // ------------------ 지도 코드 ---------------------
+
+                var LATITUDE = exif?.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
+                var LONGITUDE = exif?.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)
+
+                var lat_result = 0.0
+                var lng_result = 0.0
+
+                if(LATITUDE != null && LONGITUDE != null) {
+                    var latArray = LATITUDE.split(",", "/")
+                    var lngArray = LONGITUDE.split(",", "/")
+                    lat_result = latArray[0].toDouble()/latArray[1].toDouble() + latArray[2].toDouble()/latArray[3].toDouble() / 60 + latArray[4].toDouble()/latArray[5].toDouble() / 3600
+                    lng_result = lngArray[0].toDouble()/lngArray[1].toDouble() + lngArray[2].toDouble()/lngArray[3].toDouble() / 60 + lngArray[4].toDouble()/lngArray[5].toDouble() / 3600
+                }
+
+                if (temp == null || LATITUDE == null || LONGITUDE == null){
+                    tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(System.currentTimeMillis()).toInt(), System.currentTimeMillis(), absolutePath.toString(), 0.0, 0.0)
+                } else {
+                    var date: Date = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).parse(temp)
+                    tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date.time, absolutePath.toString(), lat_result, lng_result)
+                }
+
+                Thread(Runnable {
+                    var tid = TimelineFragment.db.noteDao().insertNote(tempNote).toInt()
+                    tempNote = Note(tid, tempNote.image_b, tempNote.content, tempNote.ymd, tempNote.time, tempNote.image, tempNote.LATITUDE, tempNote.LONGITUDE)
+                    noteList.add(tempNote)
+                    noteCount++
+                }).start()
+
+                val adapter = NoteAdapter(noteList, TimelineFragment.db, TimelineFragment())
+                TimelineFragment.recyclerView.adapter = adapter
+            }
+        }
+        progressBar_text.text = "불러오기 완료"
+        MainActivity.lock = false
     }
 }

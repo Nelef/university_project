@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kr.ac.kumoh.ce.university_project_note_ver1.R
 import kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline.model.Note
 import java.text.SimpleDateFormat
@@ -57,7 +58,10 @@ class NoteAdapter internal constructor(list: MutableList<Note>, database: AppDat
         holder.textView1.text = cNote.content.toString()
         holder.recordTime.text = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(cNote.time)
         if(cNote.image!="") {
-            holder.itemImageView.setImageURI(Uri.parse(cNote.image.toString()))
+            Glide.with(TimelineFragment.recyclerView)
+                .load(cNote.image.toString())
+                .into(holder.itemImageView)
+//            holder.itemImageView.setImageURI(Uri.parse(cNote.image.toString()))
         }
         // 여기에 이미지뷰 내용 추가
 
