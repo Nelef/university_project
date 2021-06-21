@@ -3,11 +3,13 @@ package kr.ac.kumoh.ce.university_project_note_ver1.ui.timeline
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings.Global.putString
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +18,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +37,7 @@ class TimelineFragment : Fragment() {
 
     companion object{
         lateinit var db: AppDatabase                                // DB 변수
+        lateinit var recyclerView:RecyclerView                      // 노트 리스트 RecyclerView
     }
 
     private var noteCount:Int = 0                               // DB에 저장된 노트의 개수
@@ -41,7 +45,6 @@ class TimelineFragment : Fragment() {
 
     lateinit var noteEditText:EditText                          // 노트 입력칸
     lateinit var addButton:Button                               // 노트 입력 확인버튼
-    lateinit var recyclerView:RecyclerView                      // 노트 리스트 RecyclerView
     lateinit var addImage:Button                                // 이미지 추가 버튼
 
     lateinit var calendarButton:Button                          // 날짜 설정 액티비티 호출 버튼
@@ -55,6 +58,8 @@ class TimelineFragment : Fragment() {
 
     lateinit var root2: Context
 
+    var last_image_name_SharedPreferences: SharedPreferences? = this.context?.getSharedPreferences("last_image_name", Context.MODE_PRIVATE)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,6 +68,8 @@ class TimelineFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_timeline, container, false)
 
         root2 = root.context
+
+        last_image_name_SharedPreferences = this.context?.getSharedPreferences("last_image_name", Context.MODE_PRIVATE)
 
         addButton= root.findViewById(R.id.addButton)
         noteEditText = root.findViewById(R.id.noteEditText)
@@ -224,8 +231,26 @@ class TimelineFragment : Fragment() {
                     val temp_uri = data.data
                     val ImageUri = Uri.parse(temp_uri.toString())
                     val absolutePath = getRealPathFromUri(ImageUri)
+
                     var exif: ExifInterface? = null
                     lateinit var tempNote: Note
+
+                    var current_image_time_array = absolutePath?.split("Camera") // Camera 폴더 안에 있는 이미지의 last_image_name 추출.
+                    if(current_image_time_array?.size!! > 1){
+                        var last_image_time = last_image_name_SharedPreferences?.getString("last_image_name", "") // 전역변수 마지막이미지 이름(숫자만 있으니 마지막 이미지 시간과 동일)
+                        val current_image_time = current_image_time_array[1].replace(("[^0-9]").toRegex(), "").substring(0, 14)
+                        // 현재 이름을 숫자로 변환(ex. 20210603_132728 -> 20210603132728)
+                        // .substring(0, 14) 을 통해 뒤에 쓸대없는 값 제거.
+                        if (last_image_time != null) {
+                            if(last_image_time == "")
+                                last_image_time = "0"
+                            if(last_image_time.toDouble() < current_image_time.toDouble()){
+                                last_image_name_SharedPreferences?.edit {
+                                    putString("last_image_name", current_image_time) // 전역변수에 마지막이미지 이름을 집어넣음.
+                                }
+                            }
+                        }
+                    }
 
                     try {
                         Log.d("ExifPath", absolutePath.toString())
@@ -253,22 +278,11 @@ class TimelineFragment : Fragment() {
                     }
 
                     if (temp == null || LATITUDE == null || LONGITUDE == null){
-                        tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(System.currentTimeMillis()).toInt(), System.currentTimeMillis(), ImageUri.toString(), 0.0, 0.0)
+                        tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(System.currentTimeMillis()).toInt(), System.currentTimeMillis(), absolutePath.toString(), 0.0, 0.0)
                     } else {
                         var date: Date = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).parse(temp)
-                        tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date.time, ImageUri.toString(), lat_result, lng_result)
+                        tempNote = Note(null, false, "",  SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(date).toInt(), date.time, absolutePath.toString(), lat_result, lng_result)
                     }
-                    // ------------------ 지도 코드 ---------------------
-                    // 데이터베이스 버전 바꾸고(dbname) -> TimelineFragment.kt, NotificationReceiver.kt
-                    // model/Note에
-                    //    @ColumnInfo(name = "LATITUDE") val LATITUDE: Double?,
-                    //    @ColumnInfo(name = "LONGITUDE") val LONGITUDE: Double?
-                    // 추가.
-                    // MainActivity.kt
-                    //        <activity
-                    //            android:name=".ui.map.LocationTrackingActivity"
-                    //            android:theme="@style/Theme.DialogStyle" />
-                    // 로 변경
 
                     Thread(Runnable {
                         var tid = db.noteDao().insertNote(tempNote).toInt()
