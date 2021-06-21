@@ -229,11 +229,29 @@
                 android:id="@+id/auto_image_read"
                 android:text="사진 자동 불러오기"
                 android:textSize="30sp"
-            android:fontFamily="@font/font_123rd"
+                android:fontFamily="@font/font_123rd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="15dp"/>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/progressBar_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/black"
+                android:fontFamily="@font/font_123rd"
+                android:text=""
+                android:gravity="center_horizontal"
+                />
 
 
         </LinearLayout>
