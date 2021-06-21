@@ -1,9 +1,13 @@
 package kr.ac.kumoh.ce.university_project_note_ver1.ui.option
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Environment
+import android.os.Environment.DIRECTORY_DCIM
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -42,6 +46,7 @@ class OptionFragment : Fragment() {
     lateinit var button_restore:Button
     lateinit var button_drive_backup:Button
     lateinit var button_drive_restore:Button
+    lateinit var auto_image_read:Button
 
     lateinit var backup_id: EditText
     lateinit var backup_help_id: TextView
@@ -82,6 +87,7 @@ class OptionFragment : Fragment() {
         button_restore = root.findViewById(R.id.btn_restore)
         button_drive_backup = root.findViewById(R.id.btn_drive_backup)
         button_drive_restore = root.findViewById(R.id.btn_drive_restore)
+        auto_image_read = root.findViewById(R.id.auto_image_read)
 
         backup_id = root.findViewById(R.id.backup_id)
         backup_help_id = root.findViewById(R.id.backup_help_id)
@@ -126,7 +132,9 @@ class OptionFragment : Fragment() {
                     onCompleteListener { success, message ->
                         Log.d(OptionFragment.TAG, "success: $success, message: $message")
                         Toast.makeText(context, "success: $success, message: $message", Toast.LENGTH_LONG).show()
-                        if (success) restartApp(Intent(context, MainActivity::class.java))
+                        //if (success) restartApp(Intent(context, MainActivity::class.java))
+                        backup_id.hint = ""
+                        backup_help_id.text = "로컬 백업이 완료되었습니다!"
                     }
                 }
                 .backup()
@@ -144,9 +152,10 @@ class OptionFragment : Fragment() {
                     onCompleteListener { success, message ->
                         Log.d(OptionFragment.TAG, "success: $success, message: $message")
                         Toast.makeText(context, "success: $success, message: $message", Toast.LENGTH_LONG).show()
-                        if (success) restartApp(Intent(context, MainActivity::class.java))
+                        //if (success) restartApp(Intent(context, MainActivity::class.java))
                     }
-
+                    backup_id.hint = ""
+                    backup_help_id.text = "로컬 복원이 완료되었습니다!"
                 }
                 .restore()
         }
@@ -202,13 +211,42 @@ class OptionFragment : Fragment() {
                 .addOnSuccessListener {
                     //Log.d(OptionFragment.TAG, "onSuccess: " + file_id?.getString("file_id", "").toString())
                     backup_id.setText("")
-                    backup_help_id.text = "클라우드 복원이 성공하였습니다.\n로컬 복원에서 drive.aes 를 선택하여 복원해주세요!"
+                    backup_help_id.text = "클라우드 복원이 완료되었습니다.\n로컬 복원에서 drive.aes 를 선택하여 복원해주세요!"
                 }
                 .addOnFailureListener {
                         e -> Log.d(OptionFragment.TAG, "onFailure: " + e.message)
                     backup_id.hint = ""
                     backup_help_id.text = "클라우드 복원이 실패하였습니다.\n올바른 키 값을 입력해주세요."
                 }
+        }
+
+        auto_image_read.setOnClickListener {
+            val tempRoot = ArrayList<String>()
+
+            File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DCIM).absolutePath+"/camera").walk().forEach {
+                Log.d("테스트 사진 불러오기", it.canonicalPath)
+                tempRoot.add(it.absolutePath)
+            }
+
+            val builder = AlertDialog.Builder(root.context)
+            builder.setTitle("최신 사진을 불러오시겠습니까?")
+            builder.setMessage("${tempRoot.size}개의 사진이 있습니다.")
+            builder.setPositiveButton(
+                    "확인",
+                    { dialoginterface:DialogInterface?, i:Int ->
+                        Log.d(OptionFragment.TAG, "테스트 확인버튼 누름.")
+                    })
+            builder.setNegativeButton(
+                    "취소",
+                    { dialoginterface:DialogInterface?, i:Int ->
+                        Log.d(OptionFragment.TAG, "테스트 취소버튼 누름.")
+                    })
+            builder.show()
+
+
+//            val splitArray = tempRoot[1].split("files")
+//            Log.d("테스트5", splitArray[1])
+
         }
         return root
     }

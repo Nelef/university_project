@@ -225,6 +225,16 @@
                 android:background="@color/gray77"
                 app:layout_constraintTop_toBottomOf="@id/backupAndRestoreLayout"/>
 
+            <Button
+                android:id="@+id/auto_image_read"
+                android:text="사진 자동 불러오기"
+                android:textSize="30sp"
+            android:fontFamily="@font/font_123rd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="15dp"/>
+
 
         </LinearLayout>
 
