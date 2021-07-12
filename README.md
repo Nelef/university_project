@@ -5,8 +5,7 @@
 ![슬라이드4](https://user-images.githubusercontent.com/40861980/125256815-c6073680-e337-11eb-813e-8969d9e9df47.PNG)
 ![슬라이드5](https://user-images.githubusercontent.com/40861980/125256816-c69fcd00-e337-11eb-9c3f-1786108eb7e3.PNG)
 
-video - - - 
-[![동영상](http://img.youtube.com/vi/d20muCQOti4/0.jpg)](https://youtu.be/d20muCQOti4?t=0s) 
+video - - - > [![동영상](http://img.youtube.com/vi/d20muCQOti4/0.jpg)](https://youtu.be/d20muCQOti4?t=0s) 
 
 ![슬라이드6](https://user-images.githubusercontent.com/40861980/125256818-c7d0fa00-e337-11eb-8279-43600adb9b21.PNG)
 ![슬라이드7](https://user-images.githubusercontent.com/40861980/125256820-c7d0fa00-e337-11eb-84cd-ee444228cd69.PNG)
