@@ -1,4 +1,4 @@
-{% include youtube_link.html id=d20muCQOti4 %} 
+<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style><div class='embed-container'><iframe src='http://www.youtube.com/embed/eqSCunKweu8' frameborder='0' allowfullscreen></iframe></div>
 
 ![슬라이드1](https://user-images.githubusercontent.com/40861980/125256808-c4d60980-e337-11eb-9c96-b43298c5915e.PNG)
 ![슬라이드2](https://user-images.githubusercontent.com/40861980/125256812-c56ea000-e337-11eb-9662-4ccb75b36a7a.PNG)
