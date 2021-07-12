@@ -1,4 +1,4 @@
-{% include youtube_link.html id="d20muCQOti4" %} 
+{% include youtube_link.html id=d20muCQOti4 %} 
 
 ![슬라이드1](https://user-images.githubusercontent.com/40861980/125256808-c4d60980-e337-11eb-9c96-b43298c5915e.PNG)
 ![슬라이드2](https://user-images.githubusercontent.com/40861980/125256812-c56ea000-e337-11eb-9662-4ccb75b36a7a.PNG)
